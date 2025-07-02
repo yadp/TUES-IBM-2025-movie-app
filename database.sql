@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS "episode";
 DROP TABLE IF EXISTS "involvement";
+DROP TABLE IF EXISTS "rating";
 DROP TABLE IF EXISTS "watch_history";
 DROP TABLE IF EXISTS "review";
 DROP TABLE IF EXISTS "media";
@@ -32,22 +33,31 @@ CREATE TABLE "media" (
 	genre genre_type NOT NULL,
 	type media_type NOT NULL,
 	number_of_episodes INT,
-	number_of_seasons INT
+	number_of_seasons INT,
+	average_rating INT,
+	ratings_count INT
+);
+
+create table "rating" (
+	id SERIAL PRIMARY KEY,
+	user_id INT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	media_id INT NOT NULL REFERENCES "media"(id) ON DELETE CASCADE,
+	rating INT NOT NULL CHECK (rating >= 0 AND rating <= 10)
 );
 
 CREATE TABLE "watch_history" (
 	id SERIAL PRIMARY KEY,
 	user_id INT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	media_id INT NOT NULL REFERENCES "media"(id) ON DELETE CASCADE,
-	date TIMESTAMP NOT NULL,
-	rating INT NOT NULL CHECK (rating >= 0 AND rating <= 10)
+	date TIMESTAMP NOT NULL
 );
 
 create table "review" (
 	id SERIAL PRIMARY KEY,
 	contents VARCHAR(5000) NOT NULL,
 	user_id INT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	media_id INT NOT NULL REFERENCES "media"(id) ON DELETE CASCADE
+	media_id INT NOT NULL REFERENCES "media"(id) ON DELETE cascade,
+	date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "involvement" (
