@@ -1,11 +1,8 @@
 package com.example.movie.controller;
 
-import java.util.List;
+import java.util.Optional;
 
-import com.example.movie.exception.UserExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.movie.exception.UserAlreadyLoggedOut;
+import com.example.movie.exception.UserExistsException;
+import com.example.movie.exception.UserNotFoundException;
 import com.example.movie.model.User;
 import com.example.movie.service.UserService;
 
@@ -24,14 +24,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user")
+    @PostMapping("/signup")
     public void createUser(@RequestBody User user) throws UserExistsException {
         userService.signup(user);
     }
 
+    @PostMapping("/login")
+    public void logUser(@RequestBody User user) throws UserNotFoundException {
+        userService.login(user);
+    }
+
+    @PostMapping("/logout")
+    public void logOutUser() throws UserAlreadyLoggedOut {
+        userService.logout();
+    }
+
     @GetMapping("/")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public Optional<User> getUserById(@RequestBody Long id) {
+        return userService.getUserById(id);
     }
 }
 
