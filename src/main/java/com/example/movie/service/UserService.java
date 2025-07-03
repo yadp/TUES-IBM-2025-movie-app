@@ -48,6 +48,7 @@ public class UserService {
 
         session.setAttribute("userId", u.getId());
         session.setAttribute("username", u.getUsername());
+        session.setMaxInactiveInterval(48 * 3600);
 
         createUser(u);
         return ResponseEntity.ok("Signup successful");
@@ -70,6 +71,7 @@ public class UserService {
 
         session.setAttribute("userId", dbUser.getId());
         session.setAttribute("username", dbUser.getUsername());
+        session.setMaxInactiveInterval(48 * 3600);
 
         return ResponseEntity.ok("Login successful");
     }
