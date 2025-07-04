@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.movie.exception.UserAlreadyLoggedOut;
+import com.example.movie.exception.UserAlreadyLoggedOutException;
 import com.example.movie.exception.UserExistsException;
 import com.example.movie.exception.UserNotFoundException;
 import com.example.movie.model.User;
@@ -18,7 +18,7 @@ import com.example.movie.service.UserService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public void logOutUser() throws UserAlreadyLoggedOut {
+    public void logOutUser() throws UserAlreadyLoggedOutException {
         userService.logout();
     }
 

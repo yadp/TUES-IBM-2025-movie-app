@@ -1,7 +1,7 @@
 package com.example.movie.service;
 
-import com.example.movie.exception.UserAlreadyLoggedIn;
-import com.example.movie.exception.UserAlreadyLoggedOut;
+import com.example.movie.exception.UserAlreadyLoggedInException;
+import com.example.movie.exception.UserAlreadyLoggedOutException;
 import jakarta.servlet.http.HttpSession;
 import com.example.movie.exception.UserExistsException;
 import com.example.movie.exception.UserNotFoundException;
@@ -35,7 +35,7 @@ public class UserService {
 
     public ResponseEntity<String> signup(User u) throws UserExistsException {
         if(isLoggedIn()) {
-            throw new UserAlreadyLoggedIn("User already logged in");
+            throw new UserAlreadyLoggedInException("User already logged in");
         }
 
         PasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -55,11 +55,11 @@ public class UserService {
     }
 
     public ResponseEntity<String> login(User u)
-            throws UserNotFoundException, UserAlreadyLoggedIn {
+            throws UserNotFoundException, UserAlreadyLoggedInException {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
 
         if(isLoggedIn()) {
-            throw new UserAlreadyLoggedIn("User already logged in");
+            throw new UserAlreadyLoggedInException("User already logged in");
         }
 
         User dbUser = userRepo.findByUsername(u.getUsername());
@@ -76,9 +76,9 @@ public class UserService {
         return ResponseEntity.ok("Login successful");
     }
 
-    public ResponseEntity<String> logout() throws UserAlreadyLoggedOut {
+    public ResponseEntity<String> logout() throws UserAlreadyLoggedOutException {
         if(!isLoggedIn()) {
-            throw new UserAlreadyLoggedOut("User already logged out");
+            throw new UserAlreadyLoggedOutException("User already logged out");
         }
 
         session.invalidate();
