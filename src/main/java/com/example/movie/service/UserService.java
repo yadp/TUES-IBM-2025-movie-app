@@ -66,10 +66,8 @@ public class UserService {
 
         boolean check = encoder.matches(u.getPassword(), dbUser.getPassword());
 
-        System.out.println(check);
 
         if(!check) {
-            System.out.println("here");
             throw new IncorrectPasswordException("Incorrect password");
         }
         else {
