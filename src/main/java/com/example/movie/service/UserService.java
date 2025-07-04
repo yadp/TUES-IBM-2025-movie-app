@@ -120,4 +120,23 @@ public class UserService {
         user.setPassword(encodedPassword);
         userRepo.save(user);
     }
+
+    public void changeUsername(String newUsername) throws UserAlreadyLoggedOutException {
+        Object userId = session.getAttribute("userId");
+        Object username = session.getAttribute("username");
+
+        if (userId == null || username == null) {
+            throw new UserAlreadyLoggedOutException("User logged out");
+        }
+
+        User user = userRepo.findByUsername(String.valueOf(username));
+
+        if(user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        user.setUsername(newUsername);
+        userRepo.save(user);
+        logout();
+    }
 }

@@ -44,6 +44,11 @@ public class UserController {
         userService.changePassword(password);
     }
 
+    @PostMapping("/name")
+    public void changeUsername(@RequestBody String username) {
+        userService.changeUsername(username);
+    }
+
     @GetMapping("/")
     public Optional<User> getUserById(@RequestBody Long id) {
         return userService.getUserById(id);
