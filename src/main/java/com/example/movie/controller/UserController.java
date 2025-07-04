@@ -39,6 +39,11 @@ public class UserController {
         userService.logout();
     }
 
+    @PostMapping("/pass")
+    public void changePassword(@RequestBody String password) {
+        userService.changePassword(password);
+    }
+
     @GetMapping("/")
     public Optional<User> getUserById(@RequestBody Long id) {
         return userService.getUserById(id);

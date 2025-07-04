@@ -1,10 +1,7 @@
 package com.example.movie.service;
 
-import com.example.movie.exception.UserAlreadyLoggedInException;
-import com.example.movie.exception.UserAlreadyLoggedOutException;
+import com.example.movie.exception.*;
 import jakarta.servlet.http.HttpSession;
-import com.example.movie.exception.UserExistsException;
-import com.example.movie.exception.UserNotFoundException;
 import com.example.movie.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,11 +48,11 @@ public class UserService {
         session.setMaxInactiveInterval(48 * 3600);
 
         createUser(u);
-        return ResponseEntity.ok("Signup successful");
+        return ResponseEntity.ok("Sign Up successful");
     }
 
     public ResponseEntity<String> login(User u)
-            throws UserNotFoundException, UserAlreadyLoggedInException {
+            throws UserNotFoundException, UserAlreadyLoggedInException, IncorrectPasswordException {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
 
         if(isLoggedIn()) {
@@ -69,11 +66,19 @@ public class UserService {
 
         boolean check = encoder.matches(u.getPassword(), dbUser.getPassword());
 
-        session.setAttribute("userId", dbUser.getId());
-        session.setAttribute("username", dbUser.getUsername());
-        session.setMaxInactiveInterval(48 * 3600);
+        System.out.println(check);
 
-        return ResponseEntity.ok("Login successful");
+        if(!check) {
+            System.out.println("here");
+            throw new IncorrectPasswordException("Incorrect password");
+        }
+        else {
+            session.setAttribute("userId", dbUser.getId());
+            session.setAttribute("username", dbUser.getUsername());
+            session.setMaxInactiveInterval(48 * 3600);
+
+            return ResponseEntity.ok("Login successful");
+        }
     }
 
     public ResponseEntity<String> logout() throws UserAlreadyLoggedOutException {
