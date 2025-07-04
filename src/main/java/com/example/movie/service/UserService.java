@@ -98,4 +98,21 @@ public class UserService {
 
         return userRepo.findById(userId);
     }
+
+    public void changePassword(String newPassword) throws UserAlreadyLoggedOutException {
+        Object userId = session.getAttribute("userId");
+        Object username = session.getAttribute("username");
+
+        if (userId == null || username == null) {
+            throw new UserAlreadyLoggedOutException("User logged out");
+        }
+
+        User user = userRepo.findByUsername(String.valueOf(username));
+
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(newPassword);
+
+        user.setPassword(encodedPassword);
+        userRepo.save(user);
+    }
 }
