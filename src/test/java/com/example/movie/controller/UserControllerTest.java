@@ -5,17 +5,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.Test;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.movie.exception.UserExistsException;
 import com.example.movie.service.UserService;
-import com.example.movie.exception.UserAlreadyLoggedInException;
 import com.example.movie.model.User;
 
 @ExtendWith(MockitoExtension.class)

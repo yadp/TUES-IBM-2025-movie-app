@@ -1,15 +1,16 @@
 package com.example.movie.service;
 
-import com.example.movie.exception.*;
+
 import jakarta.servlet.http.HttpSession;
-import com.example.movie.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.movie.exception.*;
 import com.example.movie.model.User;
+import com.example.movie.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class UserService {
     }
 
     public ResponseEntity<String> signup(User u) throws UserExistsException {
-        if(isLoggedIn()) {
+        if (isLoggedIn()) {
             throw new UserAlreadyLoggedInException("User already logged in");
         }
 
@@ -41,13 +42,13 @@ public class UserService {
             throw new UserExistsException("User already exists");
         }
 
-        u.setPassword(encoder.encode(u.getPassword()));
+        User toSave = new User(u.getUsername(), u.getEmail(), encoder.encode(u.getPassword()), u.getType());
 
         session.setAttribute("userId", u.getId());
         session.setAttribute("username", u.getUsername());
         session.setMaxInactiveInterval(48 * 3600);
 
-        createUser(u);
+        createUser(toSave);
         return ResponseEntity.ok("Sign Up successful");
     }
 
@@ -55,7 +56,7 @@ public class UserService {
             throws UserNotFoundException, UserAlreadyLoggedInException, IncorrectPasswordException {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        if(isLoggedIn()) {
+        if (isLoggedIn()) {
             throw new UserAlreadyLoggedInException("User already logged in");
         }
 
@@ -67,10 +68,9 @@ public class UserService {
         boolean check = encoder.matches(u.getPassword(), dbUser.getPassword());
 
 
-        if(!check) {
+        if (!check) {
             throw new IncorrectPasswordException("Incorrect password");
-        }
-        else {
+        } else {
             session.setAttribute("userId", dbUser.getId());
             session.setAttribute("username", dbUser.getUsername());
             session.setMaxInactiveInterval(48 * 3600);
@@ -80,7 +80,7 @@ public class UserService {
     }
 
     public ResponseEntity<String> logout() throws UserAlreadyLoggedOutException {
-        if(!isLoggedIn()) {
+        if (!isLoggedIn()) {
             throw new UserAlreadyLoggedOutException("User already logged out");
         }
 
@@ -129,7 +129,7 @@ public class UserService {
 
         User user = userRepo.findByUsername(String.valueOf(username));
 
-        if(user == null) {
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
