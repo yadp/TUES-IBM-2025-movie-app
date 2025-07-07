@@ -3,12 +3,7 @@ package com.example.movie.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.movie.exception.UserAlreadyLoggedOutException;
 import com.example.movie.exception.UserExistsException;
@@ -39,18 +34,24 @@ public class UserController {
         userService.logout();
     }
 
-    @PostMapping("/pass")
+    @PatchMapping("/pass")
     public void changePassword(@RequestBody String password) {
         userService.changePassword(password);
     }
 
-    @PostMapping("/name")
+    @PatchMapping("/name")
     public void changeUsername(@RequestBody String username) {
         userService.changeUsername(username);
     }
 
-    @GetMapping("/")
-    public Optional<User> getUserById(@RequestBody Long id) {
+    @PostMapping("/type")
+    public Optional<String> getUserType(@RequestBody String username) {
+        return userService.getUserType(username);
+    }
+
+    @PostMapping("/")
+    public Optional<User> getUserById(@RequestBody String idStr) {
+        Long id = Long.parseLong(idStr.trim());
         return userService.getUserById(id);
     }
 }
