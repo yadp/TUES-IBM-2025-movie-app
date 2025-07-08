@@ -3,12 +3,10 @@ package com.example.movie.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "media")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 public class Media {
 
@@ -22,9 +20,10 @@ public class Media {
     @Getter @Setter
     private String title;
 
+    @NonNull
     @Column(nullable = false)
     @Getter @Setter
-    private short year;
+    private Short year;
 
     @NonNull
     @Column(nullable = false)
@@ -35,4 +34,19 @@ public class Media {
     @Column(nullable = false)
     @Getter @Setter
     private String genre;
+
+    @NonNull
+    @Column(nullable = false)
+    @Getter @Setter
+    private String type;
+
+    @NonNull
+    @Column(nullable = false)
+    @Getter
+    private Float averageRating;
+
+    @NonNull
+    @Column(nullable = false)
+    @Getter
+    private Integer ratingsCount;
 }
