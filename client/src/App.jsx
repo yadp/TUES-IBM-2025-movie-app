@@ -2,11 +2,15 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./components/signup";
 import Login from "./components/login";
+import Home from './pages/Home';
+import './App.css'
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movies" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         
