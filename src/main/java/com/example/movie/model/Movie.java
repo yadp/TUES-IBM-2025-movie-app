@@ -7,9 +7,10 @@ import lombok.Setter;
 import lombok.NonNull;
 
 @Entity
+@DiscriminatorValue("MOVIE")
 public class Movie extends Media{
     @NonNull
     @Column(nullable = false)
     @Getter @Setter
-    private int duration;
+    private Integer duration;
 }
