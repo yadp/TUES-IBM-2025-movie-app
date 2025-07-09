@@ -6,10 +6,14 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NonNull;
+import java.util.List;
+
 
 @Entity
-@DiscriminatorValue("Show")
+@DiscriminatorValue("SHOW")
 public class Show extends Media{
+    List<Episode> episodes;
+
     @NonNull
     @Column(nullable = false)
     @Getter @Setter
