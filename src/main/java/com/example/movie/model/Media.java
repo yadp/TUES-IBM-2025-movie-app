@@ -42,11 +42,11 @@ public class Media {
 
     @NonNull
     @Column(nullable = false)
-    @Getter
+    @Getter @Setter
     private Float averageRating;
 
     @NonNull
     @Column(nullable = false)
-    @Getter
+    @Getter @Setter
     private Integer ratingsCount;
 }

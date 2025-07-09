@@ -1,9 +1,6 @@
 package com.example.movie.service;
 
-import com.example.movie.exception.UserAlreadyLoggedOutException;
-import com.example.movie.exception.UserNotAuthorizedException;
-import com.example.movie.exception.UserNotFoundException;
-import com.example.movie.model.Media;
+import com.example.movie.exception.*;
 import com.example.movie.model.Movie;
 import com.example.movie.model.Show;
 import com.example.movie.repository.MediaRepository;
@@ -23,6 +20,22 @@ public class MediaService {
     @Autowired
     private HttpSession session;
 
+    public void checkAdmin() {
+        if(session.getAttribute("username") == null) {
+            throw new UserAlreadyLoggedOutException("User logged out");
+        }
+
+        User found = userRepo.findByUsername(String.valueOf(session.getAttribute("username")));
+
+        if(found == null) {
+            throw new UserNotFoundException("No such user");
+        }
+
+        if(!found.getType().equals("admin")) {
+            throw new UserNotAuthorizedException("Not and admin");
+        }
+    }
+
     public void deleteMedia(String title) {
         if(session.getAttribute("username") == null) {
             throw new UserAlreadyLoggedOutException("User logged out");
@@ -41,38 +54,60 @@ public class MediaService {
         mediaRepo.delete(mediaRepo.findByTitle(title));
     }
 
-    public void editMedia(String title) {
-        if(session.getAttribute("username") == null) {
-            throw new UserAlreadyLoggedOutException("User logged out");
+    public void editMovie(Movie movie) {
+        checkAdmin();
+
+        Movie editedMovie = (Movie) mediaRepo.findByTitle(movie.getTitle());
+
+        if(mediaRepo.findByTitle(movie.getTitle()) == null) {
+            throw new MovieDoesNotExistException("Movie not in db");
         }
 
-        User found = userRepo.findByUsername(String.valueOf(session.getAttribute("username")));
+        editedMovie.setDuration(movie.getDuration());
+        editedMovie.setDescription(movie.getDescription());
+        editedMovie.setGenre(movie.getGenre());
+        editedMovie.setYear(movie.getYear());
+        editedMovie.setType(movie.getType());
+        editedMovie.setAverageRating(movie.getAverageRating());
+        editedMovie.setRatingsCount(movie.getRatingsCount());
 
-        if(found == null) {
-            throw new UserNotFoundException("No such user");
+        mediaRepo.save(editedMovie);
+    }
+
+    public void editShow(Show show) {
+        checkAdmin();
+
+        Show editedShow = (Show) mediaRepo.findByTitle(show.getTitle());
+
+        if(mediaRepo.findByTitle(show.getTitle()) == null) {
+            throw new ShowDoesNotExistException("Show not in db");
         }
 
-        if(!found.getType().equals("admin")) {
-            throw new UserNotAuthorizedException("Not and admin");
-        }
+        editedShow.setGenre(show.getGenre());
+        editedShow.setYear(show.getYear());
+        editedShow.setDescription(show.getDescription());
+        editedShow.setType(show.getType());
+        editedShow.setAverageRating(show.getAverageRating());
+        editedShow.setRatingsCount(show.getRatingsCount());
+        editedShow.setNumber_of_episodes(show.getNumber_of_episodes());
+        editedShow.setNumber_of_seasons(show.getNumber_of_seasons());
 
-        if(mediaRepo.findByTitle(title).getType().equals("movie")) {
-            Movie newMovie = (Movie) mediaRepo.findByTitle(title);
-
-
-        }
-        else {
-
-        }
+        mediaRepo.save(editedShow);
     }
 
     public void createMovie(Movie movie) {
         if(mediaRepo.findByTitle(movie.getTitle()) != null) {
-
+            throw new MovieExistsException("Movie already in db");
         }
+
+        mediaRepo.save(movie);
     }
 
     public void createShow(Show show) {
+        if(mediaRepo.findByTitle(show.getTitle()) != null) {
+            throw new ShowExistsException("Show already in db");
+        }
 
+        mediaRepo.save(show);
     }
 }
