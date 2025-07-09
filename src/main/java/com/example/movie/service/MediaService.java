@@ -38,19 +38,7 @@ public class MediaService {
     }
 
     public void deleteMedia(String title) {
-        if(session.getAttribute("username") == null) {
-            throw new UserAlreadyLoggedOutException("User logged out");
-        }
-
-        User found = userRepo.findByUsername(String.valueOf(session.getAttribute("username")));
-
-        if(found == null) {
-            throw new UserNotFoundException("No such user");
-        }
-
-        if(!found.getType().equals("admin")) {
-            throw new UserNotAuthorizedException("Not and admin");
-        }
+        checkAdmin();
 
         mediaRepo.delete(mediaRepo.findByTitle(title));
     }

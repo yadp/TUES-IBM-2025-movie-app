@@ -4,12 +4,13 @@ import com.example.movie.model.Media;
 import com.example.movie.model.Movie;
 import com.example.movie.model.Show;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.movie.service.MediaService;
 
+@CrossOrigin(origins = "http://localhost:4200")
+@RestController
+@RequestMapping("/media")
 public class MediaController {
     @Autowired
     MediaService mediaService;
@@ -19,12 +20,12 @@ public class MediaController {
         mediaService.deleteMedia(title);
     }
 
-    @PatchMapping("/edit/m")
+    @PatchMapping("/edit/movie")
     public void editMovie(@RequestBody Movie movie) {
         mediaService.editMovie(movie);
     }
 
-    @PatchMapping("/edit/s")
+    @PatchMapping("/edit/show")
     public void editShow(@RequestBody Show show) {
         mediaService.editShow(show);
     }
