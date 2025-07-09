@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.movie.model.User;
 import com.example.movie.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MediaService {
     @Autowired
     private UserRepository userRepo;
