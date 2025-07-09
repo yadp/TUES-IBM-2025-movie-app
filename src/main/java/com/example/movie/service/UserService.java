@@ -125,6 +125,12 @@ public class UserService {
                 new UserAlreadyLoggedOutException("User logged out")
         );
 
+        User oldUser = userRepo.findByUsername(String.valueOf(newUsername));
+
+        if (oldUser != null) {
+            throw new UserExistsException("There is such a user already");
+        }
+
         User user = userRepo.findByUsername(String.valueOf(username));
 
         if (user == null) {
