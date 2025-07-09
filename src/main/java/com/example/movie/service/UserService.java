@@ -25,8 +25,8 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User createUser(User user) {
-        return userRepo.save(user);
+    public void createUser(User user) {
+        userRepo.save(user);
     }
 
     public Optional<User> getUserById(Long id) {

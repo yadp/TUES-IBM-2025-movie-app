@@ -54,10 +54,5 @@ public class UserController {
         Long id = Long.parseLong(idStr.trim());
         return userService.getUserById(id);
     }
-
-    @PostMapping("/delete")
-    public void deleteMovie(@RequestBody String title) {
-        mediaService.deleteMovie(title);
-    }
 }
 
