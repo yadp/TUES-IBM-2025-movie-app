@@ -1,6 +1,7 @@
 package com.example.movie.service;
 
 import com.example.movie.exception.*;
+import com.example.movie.model.Media;
 import com.example.movie.model.Movie;
 import com.example.movie.model.Show;
 import com.example.movie.repository.MediaRepository;
@@ -96,19 +97,11 @@ public class MediaService {
         mediaRepo.save(editedShow);
     }
 
-    public void createMovie(Movie movie) {
-        if(mediaRepo.findByTitle(movie.getTitle()) != null) {
+    public void createMedia(Media media) {
+        if(mediaRepo.findByTitle(media.getTitle()) != null) {
             throw new MovieExistsException("Movie already in db");
         }
 
-        mediaRepo.save(movie);
-    }
-
-    public void createShow(Show show) {
-        if(mediaRepo.findByTitle(show.getTitle()) != null) {
-            throw new ShowExistsException("Show already in db");
-        }
-
-        mediaRepo.save(show);
+        mediaRepo.save(media);
     }
 }

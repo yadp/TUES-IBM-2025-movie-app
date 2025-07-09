@@ -29,13 +29,8 @@ public class MediaController {
         mediaService.editShow(show);
     }
 
-    @PostMapping("/create/m")
-    public void createMovie(@RequestBody Movie movie) {
-        mediaService.createMovie(movie);
-    }
-
-    @PostMapping("/create/s")
-    public void createShow(@RequestBody Show show) {
-        mediaService.createShow(show);
+    @PostMapping("/create")
+    public void createMedia(@RequestBody Media media) {
+        mediaService.createMedia(media);
     }
 }
