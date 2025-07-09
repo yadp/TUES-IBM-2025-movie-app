@@ -20,7 +20,8 @@ const Header = ({ onSearch, searchTerm }) => {
           </div>
         </div>
         <nav className="nav">
-          <a href="#" className="nav-link">Movies</a>
+          <a href="/" className="nav-link">Movies</a>
+          <a href="/admin" className="nav-link">Admin</a>
           <a href="/login" className="nav-link">Login</a>
           <a href="/signup" className="nav-link">SignUp</a>
         </nav>

@@ -1,22 +1,35 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import SignUp from "./components/signup";
 import Login from "./components/login";
+import Header from "./components/Header";
 import Home from './pages/Home';
+import AdminDashboard from './pages/AdminDashboard';
 import './App.css'
 
-function App() {
+function AppContent() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const location = useLocation();
+
+  const hideHeader = ['/login', '/signup'].includes(location.pathname);
+
   return (
-    <Router>
+    <>
+      {!hideHeader && <Header searchTerm={searchTerm} onSearch={setSearchTerm} />}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/movies" element={<Home />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<Home searchTerm={searchTerm} onSearch={setSearchTerm} />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/login" element={<Login />} />
-        
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}

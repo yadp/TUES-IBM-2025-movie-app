@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
 import FilterTabs from '../components/FilterTabs';
 import MovieCard from '../components/MovieCard';
 import MovieModal from '../components/MovieModal';
 import { sampleMovies } from '../data/movieData';
 
-const Movies = () => {
-  const [movies, setMovies] = useState(sampleMovies);
-  const [searchTerm, setSearchTerm] = useState('');
+const Movies = ({ searchTerm, onSearch }) => {
+  const [movies] = useState(sampleMovies);
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [watchlist, setWatchlist] = useState([]);
+
   const filteredMovies = movies.filter(movie => {
     const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase()) || movie.genre.toLowerCase().includes(searchTerm.toLowerCase()) || movie.cast.some(actor => actor.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -29,28 +28,30 @@ const Movies = () => {
         return matchesSearch;
     }
   });
+
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
     setIsModalOpen(true);
   };
+
   const handleToggleFavorite = (movieId) => {
-    setFavorites(prev => 
-      prev.includes(movieId) 
+    setFavorites(prev =>
+      prev.includes(movieId)
         ? prev.filter(id => id !== movieId)
         : [...prev, movieId]
     );
   };
+
   const handleToggleWatchlist = (movieId) => {
-    setWatchlist(prev => 
-      prev.includes(movieId) 
+    setWatchlist(prev =>
+      prev.includes(movieId)
         ? prev.filter(id => id !== movieId)
         : [...prev, movieId]
     );
   };
+
   return (
     <div className="app">
-      <Header onSearch={setSearchTerm} searchTerm={searchTerm} />
-
       <main className="main">
         <div className="container">
           <FilterTabs activeFilter={activeFilter} onFilterChange={setActiveFilter} />
@@ -76,6 +77,7 @@ const Movies = () => {
           )}
         </div>
       </main>
+
       <MovieModal
         movie={selectedMovie}
         isOpen={isModalOpen}
@@ -88,4 +90,5 @@ const Movies = () => {
     </div>
   );
 };
+
 export default Movies;
