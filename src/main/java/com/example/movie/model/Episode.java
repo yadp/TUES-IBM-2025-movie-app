@@ -17,22 +17,27 @@ public class Episode {
 
     @NonNull
     @Column(nullable = false)
+    @Getter @Setter
     private String title;
 
     @NonNull
     @Column(nullable = false)
+    @Getter @Setter
     private String description;
 
     @NonNull
     @Column(nullable = false)
+    @Getter @Setter
     private Integer duration;
 
     @NonNull
     @Column(nullable = false)
+    @Getter @Setter
     private Integer season_number;
 
     @NonNull
     @Column(nullable = false)
+    @Getter @Setter
     private Integer episode_number;
 
     @ManyToOne(optional = false)

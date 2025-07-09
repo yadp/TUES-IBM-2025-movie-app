@@ -91,6 +91,7 @@ public class MediaService {
         editedShow.setRatingsCount(show.getRatingsCount());
         editedShow.setNumber_of_episodes(show.getNumber_of_episodes());
         editedShow.setNumber_of_seasons(show.getNumber_of_seasons());
+        editedShow.setEpisodes(show.getEpisodes());
 
         mediaRepo.save(editedShow);
     }

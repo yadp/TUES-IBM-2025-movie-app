@@ -11,6 +11,7 @@ import java.util.List;
 @DiscriminatorValue("SHOW")
 public class Show extends Media{
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter @Setter
     List<Episode> episodes;
 
     @NonNull
