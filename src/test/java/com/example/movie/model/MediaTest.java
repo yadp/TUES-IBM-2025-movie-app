@@ -2,8 +2,6 @@ package com.example.movie.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Type;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MediaTest {
@@ -16,8 +14,8 @@ public class MediaTest {
     private static final int RATINGS_COUNT = 1300;
 
     @Test
-    void testMedia() {
-        Media media = new Media(TITLE, YEAR, DESCRIPTION, GENRE, TYPE, RATING, RATINGS_COUNT);
+    void testMovie() {
+        Media media = new Movie(TITLE, YEAR, DESCRIPTION, GENRE, TYPE, RATING, RATINGS_COUNT, 90);
         assertEquals(TITLE, media.getTitle());
         assertEquals(YEAR, media.getYear());
         assertEquals(DESCRIPTION, media.getDescription());

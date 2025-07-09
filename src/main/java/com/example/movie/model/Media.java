@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 public class Media {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
