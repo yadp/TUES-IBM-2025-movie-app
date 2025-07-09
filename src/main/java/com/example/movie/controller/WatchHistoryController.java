@@ -20,16 +20,16 @@ public class WatchHistoryController {
     private WatchHistoryService watchHistoryService;
 
     @GetMapping("/")
-    public List<WatchHistory> getUserById(@RequestBody String username) throws UserNotFoundException {
+    public List<WatchHistory> getUserHistory(@RequestBody String username) throws UserNotFoundException {
         return watchHistoryService.getWatchHistory(username);
     }
 
-    @PostMapping("/add-media")
+    @PostMapping("/add-to-history")
     public void addToWatchHistory(@RequestBody String username, String mediaName) throws HistoryExistsException {
         watchHistoryService.createWatchHistory(username, mediaName);
     }
 
-    @DeleteMapping("delete-media")
+    @DeleteMapping("delete-history")
     public void deleteFromWatchHistory(@RequestBody String username, String mediaName) throws HistoryNotFoundException {
         watchHistoryService.deleteWatchHistory(username, mediaName);
     }

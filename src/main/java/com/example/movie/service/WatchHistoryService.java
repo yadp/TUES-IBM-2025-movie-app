@@ -17,7 +17,6 @@ import java.time.LocalDate;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WatchHistoryService {
@@ -31,27 +30,27 @@ public class WatchHistoryService {
     //@Autowired
     //private MediaRepository mediaRepo;
 
-    public WatchHistory createWatchHistory(String username, String mediaName) {
-        User user = userRepo.findByUsername(username);
-        if (user == null) { throw new RuntimeException("User not found: " + username); }
-        //Media media =  mediaRepo.findByMediaName(mediaName);
-        //if (media == null) { throw new RuntimeException("Media not found: " + mediaName); }
-
-        return new WatchHistory(new User("", "", "", ""), 123, LocalDate.now()); //Boilerplate because media table doesn't exist yet
-        //return new WatchHistory(user, media, LocalDate.now());
-    }
-
     public List<WatchHistory> getWatchHistory(String username) {
         User user = userRepo.findByUsername(username);
         if (user == null) { throw new RuntimeException("User not found: " + username); }
 
-        return watchHistoryRepo.findByUser(user);
+        return watchHistoryRepo.findByUserOrderByDateDesc(user);
+    }
+
+    public void createWatchHistory(String username, String mediaName) {
+        User user = userRepo.findByUsername(username);
+        if (user == null) { throw new RuntimeException("User not found: " + username); }
+        //Media media =  mediaRepo.findByTitle(mediaName);
+        //if (media == null) { throw new RuntimeException("Media not found: " + mediaName); }
+
+        watchHistoryRepo.save(new WatchHistory(new User("", "", "", ""), 123, LocalDate.now())); //Boilerplate because media table doesn't exist yet
+        //watchHistoryRepo.save(new WatchHistory(user, media, LocalDate.now()));
     }
 
     public void deleteWatchHistory(String username, String mediaName) {
         User user = userRepo.findByUsername(username);
         if (user == null) { throw new RuntimeException("User not found: " + username); }
-        //Media media =  mediaRepo.findByMediaName(mediaName);
+        //Media media =  mediaRepo.findByTitle(mediaName);
         //if (media == null) { throw new RuntimeException("Media not found: " + mediaName); }
 
         //watchHistoryRepo.deleteByUserAndMedia(user, media);
