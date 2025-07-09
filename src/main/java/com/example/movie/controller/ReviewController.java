@@ -19,13 +19,13 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping("/by-user")
-    public List<Review> reviewsByUser(@RequestBody String username) throws UserNotFoundException {
+    @GetMapping("/of-user")
+    public List<Review> reviewsOfUser(@RequestBody String username) throws UserNotFoundException {
         return reviewService.getReviewsOfUser(username);
     }
 
-//    @GetMapping("/by-media")
-//    public List<Review> reviewsByMedia(@RequestBody String mediaName) throws MediaNotFoundException {
+//    @GetMapping("/of-media")
+//    public List<Review> reviewsOfMedia(@RequestBody String mediaName) throws MediaNotFoundException {
 //        return reviewService.getReviewsOfMedia(mediaName);
 //    }
 
