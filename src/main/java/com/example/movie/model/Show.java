@@ -14,13 +14,11 @@ public class Show extends Media{
     @Getter @Setter
     List<Episode> episodes;
 
-    @NonNull
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Getter @Setter
     private int number_of_episodes;
 
-    @NonNull
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Getter @Setter
     private int number_of_seasons;
 }

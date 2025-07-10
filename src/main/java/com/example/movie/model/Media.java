@@ -35,10 +35,10 @@ public class Media {
     @Getter @Setter
     private String genre;
 
-    @NonNull
-    @Column(nullable = false)
-    @Getter @Setter
-    private String type;
+//    @NonNull
+//    @Column(nullable = false)
+//    @Getter @Setter
+//    private String type;
 
     @NonNull
     @Column(nullable = false)

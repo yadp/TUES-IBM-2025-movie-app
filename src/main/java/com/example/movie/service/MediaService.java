@@ -58,7 +58,7 @@ public class MediaService {
         editedMovie.setDescription(movie.getDescription());
         editedMovie.setGenre(movie.getGenre());
         editedMovie.setYear(movie.getYear());
-        editedMovie.setType(movie.getType());
+//        editedMovie.setType(movie.getType());
         editedMovie.setAverageRating(movie.getAverageRating());
         editedMovie.setRatingsCount(movie.getRatingsCount());
 
@@ -77,7 +77,7 @@ public class MediaService {
         editedShow.setGenre(show.getGenre());
         editedShow.setYear(show.getYear());
         editedShow.setDescription(show.getDescription());
-        editedShow.setType(show.getType());
+//        editedShow.setType(show.getType());
         editedShow.setAverageRating(show.getAverageRating());
         editedShow.setRatingsCount(show.getRatingsCount());
         editedShow.setNumber_of_episodes(show.getNumber_of_episodes());
@@ -87,11 +87,19 @@ public class MediaService {
         mediaRepo.save(editedShow);
     }
 
-    public void createMedia(Media media) {
-        if(mediaRepo.findByTitle(media.getTitle()) != null) {
+    public void createMovie(Movie movie) {
+        if(mediaRepo.findByTitle(movie.getTitle()) != null) {
             throw new MovieExistsException("Movie already in db");
         }
 
-        mediaRepo.save(media);
+        mediaRepo.save(movie);
+    }
+
+    public void createShow(Show show) {
+        if(mediaRepo.findByTitle(show.getTitle()) != null) {
+            throw new MovieExistsException("Show already in db");
+        }
+
+        mediaRepo.save(show);
     }
 }
