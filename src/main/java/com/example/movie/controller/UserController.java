@@ -11,7 +11,7 @@ import com.example.movie.exception.UserNotFoundException;
 import com.example.movie.model.User;
 import com.example.movie.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/user")
 public class UserController {

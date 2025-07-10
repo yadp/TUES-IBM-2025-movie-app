@@ -1,34 +1,31 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Logout = () => {
+export default function LogOut() {
   const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8081/user/logout", {
-      method: "POST",
-      credentials: "include", // Required for Spring Boot session handling
+      method: "GET",
+      credentials: "include", 
     })
       .then((res) => {
         if (res.ok) {
-          localStorage.removeItem("loggedIn");
-          alert("Logged out successfully!");
+          alert("Logged out successfully.");
         } else {
-          return res.text().then(text => {
+          return res.text().then((text) => {
             throw new Error(text || "Logout failed");
           });
         }
       })
       .catch((err) => {
-        console.error("Logout error:", err);
-        alert(err.message || "Logout error");
+        console.error(err);
+        alert(err.message || "Server error");
       })
       .finally(() => {
-        navigate("/login");
+        navigate("/");
       });
   }, [navigate]);
 
-  return <div>Logging out...</div>;
-};
-
-export default Logout;
+  return null;
+}

@@ -17,6 +17,7 @@ export default function SignUp() {
     fetch("http://localhost:8081/user/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include", 
       body: JSON.stringify(formData),
     })
       .then((res) => {

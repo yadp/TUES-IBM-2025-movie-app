@@ -15,6 +15,7 @@ export default function Login() {
     fetch("http://localhost:8081/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include", 
       body: JSON.stringify(formData),
     })
       .then((res) => {

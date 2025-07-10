@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import SignUp from "./components/signup";
 import Login from "./components/login";
 import Header from "./components/Header";
+import LogOut from './components/Logout';
 import Home from './pages/Home';
 import AdminDashboard from './pages/AdminDashboard';
 
@@ -22,6 +23,7 @@ function AppContent() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/logout" element={<LogOut />} />
       </Routes>
     </>
   );

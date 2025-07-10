@@ -1,20 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+
 
 const Header = ({ onSearch, searchTerm }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const logged = localStorage.getItem("loggedIn") === "true";
-    setIsLoggedIn(logged);
-  }, []);
-
-  const handleLogout = () => {
-    navigate("/logout"); // Go to Logout component route
-  };
-
   return (
     <header className="header">
       <div className="container">
@@ -34,17 +22,9 @@ const Header = ({ onSearch, searchTerm }) => {
         <nav className="nav">
           <a href="/" className="nav-link">Movies</a>
           <a href="/admin" className="nav-link">Admin</a>
-          {!isLoggedIn && (
-            <>
-              <a href="/login" className="nav-link">Login</a>
-              <a href="/signup" className="nav-link">SignUp</a>
-            </>
-          )}
-          {isLoggedIn && (
-            <button onClick={handleLogout} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>
-              Logout
-            </button>
-          )}
+          <a href="/login" className="nav-link">Login</a>
+          <a href="/signup" className="nav-link">SignUp</a>
+          <a href="/logout" className="nav-link">LogOut</a>
         </nav>
       </div>
     </header>
