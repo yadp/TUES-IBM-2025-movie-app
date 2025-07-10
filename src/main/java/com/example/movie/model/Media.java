@@ -7,6 +7,7 @@ import lombok.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "media")
 @DiscriminatorColumn(name = "media_type")
+@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 public class Media {
