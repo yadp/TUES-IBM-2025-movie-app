@@ -50,7 +50,7 @@ public class UserControllerTest {
 
         Mockito.when(userService.getUserById(userId)).thenReturn(expected);
 
-        Optional<User> result = userController.getUserById(userId);
+        Optional<User> result = userController.getUserById(userId.toString());
 
         assertTrue(result.isPresent());
         assertEquals(userInput, result.get());
