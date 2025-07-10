@@ -8,6 +8,7 @@ import lombok.*;
 @Table(name = "media")
 @DiscriminatorColumn(name = "media_type")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,27 +35,18 @@ public class Media {
     @Getter @Setter
     private String genre;
 
-    @NonNull
-    @Column(nullable = false)
-    @Getter @Setter
-    private String type;
+//    @NonNull
+//    @Column(nullable = false)
+//    @Getter @Setter
+//    private String type;
 
     @NonNull
     @Column(nullable = false)
-    @Getter
+    @Getter @Setter
     private Float averageRating;
 
     @NonNull
     @Column(nullable = false)
-    @Getter
+    @Getter @Setter
     private Integer ratingsCount;
-
-    public Media(@NonNull String title, @NonNull Short year, @NonNull String description, @NonNull String genre, @NonNull Float averageRating, @NonNull Integer ratingsCount) {
-        this.title = title;
-        this.year = year;
-        this.description = description;
-        this.genre = genre;
-        this.averageRating = averageRating;
-        this.ratingsCount = ratingsCount;
-    }
 }

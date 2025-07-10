@@ -25,8 +25,8 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User createUser(User user) {
-        return userRepo.save(user);
+    public void createUser(User user) {
+        userRepo.save(user);
     }
 
     public Optional<User> getUserById(Long id) {
@@ -124,6 +124,12 @@ public class UserService {
         Long userId = Optional.of((Long) session.getAttribute("userId")).orElseThrow(() ->
                 new UserAlreadyLoggedOutException("User logged out")
         );
+
+        User oldUser = userRepo.findByUsername(String.valueOf(newUsername));
+
+        if (oldUser != null) {
+            throw new UserExistsException("There is such a user already");
+        }
 
         User user = userRepo.findByUsername(String.valueOf(username));
 
