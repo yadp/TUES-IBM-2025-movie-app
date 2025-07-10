@@ -18,15 +18,24 @@ const AdminDashboard = () => {
   const [editIndex, setEditIndex] = useState(null);
 
   const handleInputChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    setForm({
+      ...form,
+      [name]: type === 'number' ? (value === '' ? '' : Number(value)) : value
+    });
   };
 
   const handleAddOrUpdate = () => {
     if (!form.title || !form.genre || !form.cast) return;
 
+    const clampedRating = Math.min(Number(form.rating), 5);
+
     const movieData = {
       ...form,
       id: editIndex !== null ? movies[editIndex].id : Date.now(),
+      year: Number(form.year),
+      duration: Number(form.duration),
+      rating: clampedRating,
       cast: form.cast.split(',').map(c => c.trim()),
       reviews: form.reviews || []
     };
@@ -56,7 +65,10 @@ const AdminDashboard = () => {
 
   const handleEdit = (index) => {
     const movie = movies[index];
-    setForm({ ...movie, cast: movie.cast.join(', ') });
+    setForm({
+      ...movie,
+      cast: movie.cast.join(', ')
+    });
     setEditIndex(index);
   };
 
@@ -86,10 +98,22 @@ const AdminDashboard = () => {
       <div className="form">
         <input name="title" placeholder="Title" value={form.title} onChange={handleInputChange} />
         <input name="genre" placeholder="Genre" value={form.genre} onChange={handleInputChange} />
-        <input name="year" placeholder="Year" value={form.year} onChange={handleInputChange} />
-        <input name="duration" placeholder="Duration" value={form.duration} onChange={handleInputChange} />
-        <input name="rating" placeholder="Rating" value={form.rating} onChange={handleInputChange} />
-        <input name="type" placeholder="Type (movie or series)" value={form.type} onChange={handleInputChange} />
+        <input name="year" type="number" placeholder="Year" value={form.year} onChange={handleInputChange} />
+        <input name="duration" type="number" placeholder="Duration (minutes)" value={form.duration} onChange={handleInputChange} />
+        <input
+          name="rating"
+          type="number"
+          min="0"
+          max="5"
+          step="0.1"
+          placeholder="Rating (0 to 5)"
+          value={form.rating}
+          onChange={handleInputChange}
+        />
+        <select name="type" value={form.type} onChange={handleInputChange}>
+          <option value="movie">Movie</option>
+          <option value="series">Series</option>
+        </select>
         <input name="cast" placeholder="Cast (comma-separated)" value={form.cast} onChange={handleInputChange} />
         <input name="director" placeholder="Director" value={form.director} onChange={handleInputChange} />
         <input name="poster" placeholder="Poster URL" value={form.poster} onChange={handleInputChange} />

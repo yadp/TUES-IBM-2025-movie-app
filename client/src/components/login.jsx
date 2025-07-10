@@ -20,7 +20,7 @@ export default function Login() {
       .then((res) => {
         if (res.ok) {
           alert("Login successful!");
-          window.location.href = "/movies";
+          window.location.href = "/";
         } else {
           return res.text().then(text => {
             throw new Error(text || "Invalid credentials");
