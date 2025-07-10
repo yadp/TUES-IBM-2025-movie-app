@@ -29,7 +29,7 @@ public class UserController {
         userService.login(user);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public void logOutUser() throws UserAlreadyLoggedOutException {
         userService.logout();
     }
@@ -45,8 +45,8 @@ public class UserController {
     }
 
     @GetMapping("/type")
-    public Optional<String> getUserType(@RequestBody String username) {
-        return userService.getUserType(username);
+    public Optional<String> getUserType() {
+        return userService.getUserType();
     }
 
     @GetMapping("/")
