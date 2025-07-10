@@ -31,7 +31,7 @@ public class MediaController {
     }
 
     @PostMapping("/create/movie")
-    public void createMedia(@RequestBody Movie movie) {
+    public void createMovie(@RequestBody Movie movie) {
         mediaService.createMovie(movie);
     }
 
