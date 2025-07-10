@@ -12,7 +12,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("/api/login", {
+    fetch("http://localhost:8081/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -22,12 +22,14 @@ export default function Login() {
           alert("Login successful!");
           window.location.href = "/movies";
         } else {
-          alert("Invalid credentials.");
+          return res.text().then(text => {
+            throw new Error(text || "Invalid credentials");
+          });
         }
       })
       .catch((err) => {
         console.error(err);
-        alert("Server error.");
+        alert(err.message || "Server error");
       });
   };
 
@@ -94,7 +96,4 @@ const styles = {
   link: {
     marginTop: "10px",
   },
-
 };
-
-

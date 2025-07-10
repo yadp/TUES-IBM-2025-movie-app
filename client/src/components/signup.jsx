@@ -5,6 +5,7 @@ export default function SignUp() {
     username: "",
     email: "",
     password: "",
+    type: "user",
   });
 
   const handleChange = (e) => {
@@ -13,7 +14,7 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("/api/signup", {
+    fetch("http://localhost:8081/user/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -23,12 +24,14 @@ export default function SignUp() {
           alert("Account created! Please log in.");
           window.location.href = "/login";
         } else {
-          alert("Error creating account.");
+          return res.text().then(text => {
+            throw new Error(text || "Error creating account");
+          });
         }
       })
       .catch((err) => {
         console.error(err);
-        alert("Server error.");
+        alert(err.message || "Server error");
       });
   };
 
@@ -63,6 +66,15 @@ export default function SignUp() {
           required
           style={styles.input}
         />
+        <select
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          style={styles.input}
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
         <button type="submit" style={styles.button}>Create Account</button>
       </form>
       <div style={styles.link}>
