@@ -29,7 +29,7 @@ CREATE TABLE "media" (
 	title VARCHAR(255) NOT NULL,
 	year INT NOT NULL,
 	description VARCHAR(5000) NOT NULL,
-	duration INT NOT NULL,
+	duration INT,
 	genre genre_type NOT NULL,
 	type media_type NOT NULL,
 	number_of_episodes INT,
