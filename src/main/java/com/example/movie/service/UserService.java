@@ -142,8 +142,8 @@ public class UserService {
         logout();
     }
 
-    public Optional<String> getUserType(String username) {
-        User user = userRepo.findByUsername(username);
+    public Optional<String> getUserType() {
+        User user = userRepo.findByUsername((String) session.getAttribute("username"));
         if(user == null) {
             return Optional.empty();
         }
