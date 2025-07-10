@@ -1,16 +1,16 @@
 package com.example.movie.service;
 
 import com.example.movie.exception.*;
-import com.example.movie.model.Media;
-import com.example.movie.model.Movie;
-import com.example.movie.model.Show;
 import com.example.movie.repository.MediaRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.movie.model.User;
 import com.example.movie.repository.UserRepository;
-import org.springframework.stereotype.Service;
+import com.example.movie.model.Episode;
+import com.example.movie.model.Movie;
+import com.example.movie.model.Show;
 
 @Service
 public class MediaService {
@@ -82,12 +82,21 @@ public class MediaService {
         editedShow.setRatingsCount(show.getRatingsCount());
         editedShow.setNumber_of_episodes(show.getNumber_of_episodes());
         editedShow.setNumber_of_seasons(show.getNumber_of_seasons());
-        editedShow.setEpisodes(show.getEpisodes());
+
+        editedShow.getEpisodes().clear();
+        if (show.getEpisodes() != null) {
+            for (Episode ep : show.getEpisodes()) {
+                ep.setShow(editedShow);
+                editedShow.getEpisodes().add(ep);
+            }
+        }
 
         mediaRepo.save(editedShow);
     }
 
     public void createMovie(Movie movie) {
+        checkAdmin();
+
         if(mediaRepo.findByTitle(movie.getTitle()) != null) {
             throw new MovieExistsException("Movie already in db");
         }
@@ -96,6 +105,8 @@ public class MediaService {
     }
 
     public void createShow(Show show) {
+        checkAdmin();
+
         if(mediaRepo.findByTitle(show.getTitle()) != null) {
             throw new MovieExistsException("Show already in db");
         }

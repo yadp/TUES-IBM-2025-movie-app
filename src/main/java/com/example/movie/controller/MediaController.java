@@ -15,7 +15,7 @@ public class MediaController {
     @Autowired
     MediaService mediaService;
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public void deleteMedia(@RequestBody String title) {
         mediaService.deleteMedia(title);
     }
