@@ -35,12 +35,16 @@ public class MediaService {
         }
 
         if(!found.getType().equals("admin")) {
-            throw new UserNotAuthorizedException("Not and admin");
+            throw new UserNotAuthorizedException("Not an admin");
         }
     }
 
     public void deleteMedia(String title) {
         checkAdmin();
+
+        if(mediaRepo.findByTitle(title) == null) {
+            throw new MovieDoesNotExistException("Movie not in db");
+        }
 
         mediaRepo.delete(mediaRepo.findByTitle(title));
     }
