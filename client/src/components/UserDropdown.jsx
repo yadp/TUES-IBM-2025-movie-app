@@ -63,7 +63,7 @@ const UserDropdown = ({ user, onLogout }) => {
       const response = await fetch('http://localhost:8081/user/pass', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: newPassword,
+        body: JSON.stringify(newPassword),
         credentials: 'include'
       });
 
@@ -90,7 +90,7 @@ const UserDropdown = ({ user, onLogout }) => {
       const response = await fetch('http://localhost:8081/user/name', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: newUsername,
+        body: JSON.stringify(newUsername),
         credentials: 'include'
       });
 

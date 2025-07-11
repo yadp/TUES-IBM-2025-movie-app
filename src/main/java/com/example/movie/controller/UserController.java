@@ -3,7 +3,6 @@ package com.example.movie.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.movie.exception.UserAlreadyLoggedOutException;
@@ -54,16 +53,6 @@ public class UserController {
     public Optional<User> getUserById(@RequestBody String idStr) {
         Long id = Long.parseLong(idStr.trim());
         return userService.getUserById(id);
-    }
-
-    @GetMapping("/current")
-    public ResponseEntity<User> getCurrentUser() {
-        Optional<User> currentUser = userService.getCurrentUser();
-        if (currentUser.isPresent()) {
-            return ResponseEntity.ok(currentUser.get());
-        } else {
-            return ResponseEntity.status(401).build(); // Unauthorized
-        }
     }
 }
 
