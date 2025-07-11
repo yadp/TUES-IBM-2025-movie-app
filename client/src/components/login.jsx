@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Login() {
+export default function Login({ onLoginSuccess }) {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -10,28 +10,62 @@ export default function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:8081/user/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", 
-      body: JSON.stringify(formData),
-    })
-      .then((res) => {
-        if (res.ok) {
-          alert("Login successful!");
-          window.location.href = "/";
-        } else {
-          return res.text().then(text => {
-            throw new Error(text || "Invalid credentials");
-          });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert(err.message || "Server error");
+    
+    try {
+      const response = await fetch("http://localhost:8081/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", 
+        body: JSON.stringify(formData),
       });
+
+      if (response.ok) {
+        const [typeResponse, userResponse] = await Promise.all([
+          fetch("http://localhost:8081/user/type", {
+            method: "GET",
+            credentials: "include"
+          }),
+          fetch("http://localhost:8081/user/current", {
+            method: "GET",
+            credentials: "include"
+          })
+        ]);
+
+        let userType = "user"; 
+        let userInfo = { username: formData.username, email: "" }; 
+
+        if (typeResponse.ok) {
+          const type = await typeResponse.text();
+          userType = type || "user";
+        }
+
+        if (userResponse.ok) {
+          userInfo = await userResponse.json();
+        }
+
+        const userData = {
+          username: userInfo.username,
+          email: userInfo.email,
+          type: userType
+        };
+        
+        alert("Login successful!");
+        
+        if (onLoginSuccess) {
+          onLoginSuccess(userData);
+        }
+        
+        window.location.href = "/";
+      } else {
+        const text = await response.text();
+        throw new Error(text || "Invalid credentials");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Server error");
+    }
   };
 
   return (
