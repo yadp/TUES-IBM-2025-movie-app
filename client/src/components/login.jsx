@@ -38,7 +38,9 @@ export default function Login({ onLoginSuccess }) {
 
         if (typeResponse.ok) {
           const type = await typeResponse.text();
-          userType = type || "user";
+          // Clean up the user type - remove any extra quotes
+          userType = type ? type.replace(/['"]/g, '').trim() : "user";
+          console.log('Login - Original type:', type, 'Cleaned type:', userType);
         }
 
         if (userResponse.ok) {
@@ -51,6 +53,7 @@ export default function Login({ onLoginSuccess }) {
           type: userType
         };
         
+        console.log('Login - Final user data:', userData);
         alert("Login successful!");
         
         if (onLoginSuccess) {

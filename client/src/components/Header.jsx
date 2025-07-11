@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Add this import
 import UserDropdown from './UserDropdown';
 
 const Header = ({ onSearch, searchTerm, user, setUser }) => {
+  console.log('Header - Current user:', user); // Debug log
 
   const handleLogout = async () => {
     try {
@@ -50,20 +52,20 @@ const Header = ({ onSearch, searchTerm, user, setUser }) => {
         </div>
         
         <nav className="nav">
-          <a href="/" className="nav-link">Movies</a>
+          <Link to="/" className="nav-link">Movies</Link>
           {user && user.type === 'admin' && (
-            <a href="/admin" className="nav-link">Admin</a>
+            <Link to="/admin" className="nav-link">Admin</Link>
           )}
           
           {user ? (
             <>
               <UserDropdown user={user} onLogout={handleLogoutOnly} />
-              <a href="/logout" className="nav-link">LogOut</a>
+              <Link to="/logout" className="nav-link">LogOut</Link>
             </>
           ) : (
             <>
-              <a href="/login" className="nav-link">Login</a>
-              <a href="/signup" className="nav-link">SignUp</a>
+              <Link to="/login" className="nav-link">Login</Link>
+              <Link to="/signup" className="nav-link">SignUp</Link>
             </>
           )}
         </nav>
