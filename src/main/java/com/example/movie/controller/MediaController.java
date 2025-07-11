@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.movie.service.MediaService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/media")
 public class MediaController {

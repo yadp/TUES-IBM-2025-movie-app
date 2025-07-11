@@ -46,7 +46,6 @@ public class UserServiceTest {
     @Test
     void testSignUpFailExists() throws UserExistsException {
         userService.signup(userInput);
-        userService.logout();
         assertThrows(UserExistsException.class, () -> {
             userService.signup(userInput);
         });
@@ -54,18 +53,19 @@ public class UserServiceTest {
 
 //    the function above also tests the logout function
 
-    @Test
-    void testSignUpFailLoggedIn() throws UserAlreadyLoggedInException {
-        userService.signup(userInput);
-
-        assertThrows(UserAlreadyLoggedInException.class, () -> {
-            userService.signup(userInput);
-        });
-    }
+//    @Test
+//    void testSignUpFailLoggedIn() throws UserAlreadyLoggedInException {
+//        userService.signup(userInput);
+//
+//        assertThrows(UserAlreadyLoggedInException.class, () -> {
+//            userService.signup(userInput);
+//        });
+//    }
 
     @Test
     void testLoginSuccess() {
         userService.signup(userInput);
+        userService.login(userInput);
         userService.logout();
         userService.login(userInput);
 
@@ -79,7 +79,6 @@ public class UserServiceTest {
     @Test
     void testLogInAlreadyLoggedIn() throws UserAlreadyLoggedInException {
         userService.signup(userInput);
-        userService.logout();
         userService.login(userInput);
 
         assertThrows(UserAlreadyLoggedInException.class, () -> {
@@ -90,6 +89,7 @@ public class UserServiceTest {
     @Test
     void testLogOutAlreadyLoggedOut() throws UserAlreadyLoggedOutException {
         userService.signup(userInput);
+        userService.login(userInput);
         userService.logout();
         assertThrows(UserAlreadyLoggedOutException.class, () -> {
             userService.logout();

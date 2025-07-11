@@ -44,9 +44,9 @@ public class UserService {
 
         User toSave = new User(u.getUsername(), u.getEmail(), passwordEncoder.encode(u.getPassword()), u.getType());
 
-        session.setAttribute("userId", u.getId());
-        session.setAttribute("username", u.getUsername());
-        session.setMaxInactiveInterval(48 * 3600);
+//        session.setAttribute("userId", u.getId());
+//        session.setAttribute("username", u.getUsername());
+//        session.setMaxInactiveInterval(48 * 3600);
 
         createUser(toSave);
         return ResponseEntity.ok("Sign Up successful");
