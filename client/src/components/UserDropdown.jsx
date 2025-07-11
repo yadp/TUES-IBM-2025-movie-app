@@ -98,6 +98,7 @@ const UserDropdown = ({ user, onLogout }) => {
         alert('Username changed successfully! Please log in again.');
         setNewUsername('');
         setShowChangeUsername(false);
+        // Use the proper logout function that handles both server and client
         onLogout();
       } else {
         const error = await response.text();
@@ -107,6 +108,11 @@ const UserDropdown = ({ user, onLogout }) => {
       console.error('Error changing username:', error);
       alert('Server error. Please try again.');
     }
+  };
+
+  const handleLogoutClick = () => {
+    setIsOpen(false); 
+    onLogout(); 
   };
 
   return (
@@ -196,7 +202,7 @@ const UserDropdown = ({ user, onLogout }) => {
             )}
 
             <div className="dropdown-divider"></div>
-            <button onClick={onLogout} className="dropdown-item logout-item">
+            <button onClick={handleLogoutClick} className="dropdown-item logout-item">
               <LogOut size={16} /><span>Logout</span>
             </button>
           </div>

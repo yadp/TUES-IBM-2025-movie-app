@@ -1,39 +1,62 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function LogOut() {
+export default function LogOut({ onLogout }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8081/user/logout", {
-      method: "GET",
-      headers: {
-        Authorization: "Basic " + btoa("test:test"),
-      },
-      credentials: "include", // add if you use cookies/sessions
-    })
-      .then(async (res) => {
-        let data = {};
-        try {
-          data = await res.json(); // try parse JSON response
-        } catch (e) {
-          // If no JSON or empty body, just ignore error here
-        }
+    const performLogout = async () => {
+      try {
+        const logoutResponse = await fetch("http://localhost:8081/user/logout", {
+          method: "GET",
+          headers: {
+            Authorization: "Basic " + btoa("test:test"),
+          },
+          credentials: "include",
+        });
 
-        if (res.ok) {
-          alert(data.message || "Logged out successfully.");
+        console.log("Logout response:", logoutResponse);
+
+        const currentUserResponse = await fetch("http://localhost:8081/user/current", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (currentUserResponse.status === 401) {
+          alert("Logged out successfully.");
+          if (onLogout) {
+            onLogout();
+          }
+        } else if (currentUserResponse.ok) {
+          throw new Error("Logout failed - user is still logged in");
         } else {
-          throw new Error(data.message || `Logout failed (status ${res.status})`);
+          throw new Error(`Error checking logout status (status ${currentUserResponse.status})`);
         }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert(err.message || "Server error");
-      })
-      .finally(() => {
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert(error.message || "Server error during logout");
+        
+        if (onLogout) {
+          onLogout();
+        }
+      } finally {
         navigate("/");
-      });
-  }, [navigate]);
+      }
+    };
 
-  return null;
+    performLogout();
+  }, [navigate, onLogout]);
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      backgroundColor: '#111',
+      color: '#fff'
+    }}>
+      Logging out...
+    </div>
+  );
 }

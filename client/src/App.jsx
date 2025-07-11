@@ -9,7 +9,6 @@ import AdminDashboard from './pages/AdminDashboard';
 
 import './App.css';
 
-// Protected Route Component for Admin
 function ProtectedAdminRoute({ children, user }) {
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -47,50 +46,40 @@ function AppContent() {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8081/user/type', {
+      const response = await fetch('http://localhost:8081/user/current', {
         method: 'GET',
         credentials: 'include'
       });
 
       if (response.ok) {
-        const userType = await response.text();
+        const userInfo = await response.json();
+        
+        const typeResponse = await fetch('http://localhost:8081/user/type', {
+          method: 'GET',
+          credentials: 'include'
+        });
 
-        if (userType) {
-          // Clean up the user type - remove any extra quotes
-          const cleanUserType = userType.replace(/['"]/g, '').trim();
-          
-          const userInfoResponse = await fetch('http://localhost:8081/user/current', {
-            method: 'GET',
-            credentials: 'include'
-          });
-
-          if (userInfoResponse.ok) {
-            const userInfo = await userInfoResponse.json();
-            setUser({
-              username: userInfo.username,
-              email: userInfo.email,
-              type: cleanUserType
-            });
-            console.log('Auth check - User set:', {
-              username: userInfo.username,
-              email: userInfo.email,
-              type: cleanUserType,
-              originalType: userType
-            });
-          } else {
-            setUser({
-              username: 'User',
-              email: '',
-              type: cleanUserType
-            });
-            console.log('Auth check - User set with default username:', {
-              username: 'User',
-              email: '',
-              type: cleanUserType,
-              originalType: userType
-            });
-          }
+        let userType = "user";
+        if (typeResponse.ok) {
+          const type = await typeResponse.text();
+          userType = type ? type.replace(/['"]/g, '').trim() : "user";
         }
+
+        setUser({
+          username: userInfo.username,
+          email: userInfo.email,
+          type: userType
+        });
+        
+        console.log('Auth check - User set:', {
+          username: userInfo.username,
+          email: userInfo.email,
+          type: userType
+        });
+      } else if (response.status === 401) {
+        setUser(null);
+      } else {
+        console.error('Unexpected response from /current:', response.status);
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
@@ -101,14 +90,12 @@ function AppContent() {
 
   const handleLoginSuccess = async (userData) => {
     console.log('Login success - User data:', userData);
-    // Clean up the user type in case it comes with extra quotes
     const cleanedUserData = {
       ...userData,
       type: userData.type ? userData.type.replace(/['"]/g, '').trim() : userData.type
     };
     console.log('Login success - Cleaned user data:', cleanedUserData);
     setUser(cleanedUserData);
-    // Optionally refresh auth status from backend to ensure consistency
     await checkAuthStatus();
   };
 
@@ -151,7 +138,6 @@ function AppContent() {
         />
         <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/logout" element={<LogOut onLogout={handleLogout} />} />
       </Routes>
     </>
   );

@@ -1,32 +1,42 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Add this import
+import { Link } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
 
 const Header = ({ onSearch, searchTerm, user, setUser }) => {
-  console.log('Header - Current user:', user); // Debug log
+  console.log('Header - Current user:', user);
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8081/user/logout', {
+      const logoutResponse = await fetch('http://localhost:8081/user/logout', {
         method: 'GET',
         headers: {
           Authorization: "Basic " + btoa("test:test"),
         },
+        credentials: 'include'
       });
 
-      console.log("Logout response:", response);
-      if (response.ok) {
+      console.log("Logout response:", logoutResponse);
+      
+      const currentUserResponse = await fetch('http://localhost:8081/user/current', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (currentUserResponse.status === 401) {
         alert('Logged out successfully.');
         setUser(null);
         window.location.href = '/';
+      } else if (currentUserResponse.ok) {
+        throw new Error('Logout failed - user is still logged in');
       } else {
-        const error = await response.text();
-        throw new Error(error || 'Logout failed (status ' + response.status + ')');
+        throw new Error('Error checking logout status');
       }
     } catch (error) {
       console.error('Error logging out:', error);
-      alert(error.message || 'Server error');
+      alert(error.message || 'Server error during logout');
+      setUser(null);
+      window.location.href = '/';
     }
   };
 
@@ -58,10 +68,7 @@ const Header = ({ onSearch, searchTerm, user, setUser }) => {
           )}
           
           {user ? (
-            <>
-              <UserDropdown user={user} onLogout={handleLogoutOnly} />
-              <Link to="/logout" className="nav-link">LogOut</Link>
-            </>
+            <UserDropdown user={user} onLogout={handleLogoutOnly} />
           ) : (
             <>
               <Link to="/login" className="nav-link">Login</Link>
