@@ -7,15 +7,23 @@ export default function LogOut() {
   useEffect(() => {
     fetch("http://localhost:8081/user/logout", {
       method: "GET",
-      credentials: "include", 
+      headers: {
+        Authorization: "Basic " + btoa("test:test"),
+      },
+      credentials: "include", // add if you use cookies/sessions
     })
-      .then((res) => {
+      .then(async (res) => {
+        let data = {};
+        try {
+          data = await res.json(); // try parse JSON response
+        } catch (e) {
+          // If no JSON or empty body, just ignore error here
+        }
+
         if (res.ok) {
-          alert("Logged out successfully.");
+          alert(data.message || "Logged out successfully.");
         } else {
-          return res.text().then((text) => {
-            throw new Error(text || "Logout failed");
-          });
+          throw new Error(data.message || `Logout failed (status ${res.status})`);
         }
       })
       .catch((err) => {
