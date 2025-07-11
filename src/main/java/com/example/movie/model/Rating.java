@@ -21,15 +21,11 @@ public class Rating {
     @Getter @Setter
     private User user;
 
-//    @NonNull
-//    @ManyToOne
-//    @JoinColumn(name = "media_id", nullable = false)
-//    @Getter @Setter
-//    private Media media;
     @NonNull
-    @Column(nullable = false, unique = true)
+    @ManyToOne
+    @JoinColumn(name = "media_id", nullable = false)
     @Getter @Setter
-    private long media_id;
+    private Media media;
 
     @NonNull
     @Column(nullable = false)

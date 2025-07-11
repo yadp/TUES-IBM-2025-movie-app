@@ -1,5 +1,7 @@
 package com.example.movie.controller;
 
+import com.example.movie.DTO.ReviewDTO;
+import com.example.movie.exception.MediaNotFoundException;
 import com.example.movie.exception.ReviewExistsException;
 import com.example.movie.exception.ReviewNotFoundException;
 import com.example.movie.exception.UserNotFoundException;
@@ -20,23 +22,24 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @GetMapping("/of-user")
-    public List<Review> reviewsOfUser(@RequestBody String username) throws UserNotFoundException {
-        return reviewService.getReviewsOfUser(username);
+    public List<Review> reviewsOfUser() throws UserNotFoundException {
+        return reviewService.getReviewsOfUser();
     }
 
-//    @GetMapping("/of-media")
-//    public List<Review> reviewsOfMedia(@RequestBody String mediaName) throws MediaNotFoundException {
-//        return reviewService.getReviewsOfMedia(mediaName);
-//    }
-
-    @PostMapping("/add-review")
-    public void addReview(@RequestBody String username, String mediaName, String reviewContents) throws ReviewExistsException {
-        reviewService.createReview(username, mediaName, reviewContents);
+    @GetMapping("/of-media")
+    public List<Review> reviewsOfMedia(@RequestBody String title) throws MediaNotFoundException {
+        return reviewService.getReviewsOfMedia(title);
     }
 
-    @DeleteMapping("delete-review")
-    public void deleteReview(@RequestBody String username, String mediaName) throws ReviewNotFoundException {
-        reviewService.deleteReview(username, mediaName);
+    @PostMapping("/add")
+    public void addReview(@RequestBody ReviewDTO reviewDTO) throws ReviewExistsException {
+        reviewService.createReview(reviewDTO.getTitle(), reviewDTO.getReviewContents());
+    }
+
+
+    @DeleteMapping("/delete")
+    public void deleteReview(@RequestBody String title) throws ReviewNotFoundException {
+        reviewService.deleteReview(title);
     }
 }
 
