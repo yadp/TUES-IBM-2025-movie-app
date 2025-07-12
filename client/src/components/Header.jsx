@@ -6,40 +6,6 @@ import UserDropdown from './UserDropdown';
 const Header = ({ onSearch, searchTerm, user, setUser }) => {
   console.log('Header - Current user:', user);
 
-  const handleLogout = async () => {
-    try {
-      const logoutResponse = await fetch('http://localhost:8081/user/logout', {
-        method: 'GET',
-        headers: {
-          Authorization: "Basic " + btoa("test:test"),
-        },
-        credentials: 'include'
-      });
-
-      console.log("Logout response:", logoutResponse);
-      
-      const currentUserResponse = await fetch('http://localhost:8081/user/current', {
-        method: 'GET',
-        credentials: 'include'
-      });
-
-      if (currentUserResponse.status === 401) {
-        alert('Logged out successfully.');
-        setUser(null);
-        window.location.href = '/';
-      } else if (currentUserResponse.ok) {
-        throw new Error('Logout failed - user is still logged in');
-      } else {
-        throw new Error('Error checking logout status');
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
-      alert(error.message || 'Server error during logout');
-      setUser(null);
-      window.location.href = '/';
-    }
-  };
-
   const handleLogoutOnly = () => {
     setUser(null);
   };

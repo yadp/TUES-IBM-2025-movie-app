@@ -138,6 +138,7 @@ function AppContent() {
         />
         <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/logout" element={<LogOut onLogout={handleLogout} />} />
       </Routes>
     </>
   );

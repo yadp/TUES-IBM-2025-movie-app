@@ -110,9 +110,37 @@ const UserDropdown = ({ user, onLogout }) => {
     }
   };
 
-  const handleLogoutClick = () => {
-    setIsOpen(false); 
-    onLogout(); 
+  const handleLogoutClick = async () => {
+    setIsOpen(false);
+    
+    try {
+      const response = await fetch("http://localhost:8081/user/logout", {
+        method: "GET",
+        headers: {
+          Authorization: "Basic " + btoa("test:test"),
+        },
+        credentials: "include",
+      });
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (e) {
+      }
+
+      if (response.ok) {
+        alert(data.message || "Logged out successfully.");
+        onLogout(); 
+        window.location.href = "/";
+      } else {
+        throw new Error(data.message || `Logout failed (status ${response.status})`);
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Server error");
+      onLogout();
+      window.location.href = "/";
+    }
   };
 
   return (
