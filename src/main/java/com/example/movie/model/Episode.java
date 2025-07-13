@@ -8,9 +8,8 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Episode {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,6 +39,7 @@ public class Episode {
     @Getter @Setter
     private Integer episode_number;
 
+    @NonNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "show_id", nullable = false)
     private Show show;

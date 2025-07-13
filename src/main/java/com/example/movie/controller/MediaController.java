@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.movie.service.MediaService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+import java.util.List;
+
+//@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/media")
 public class MediaController {
@@ -17,9 +19,9 @@ public class MediaController {
 
     @DeleteMapping("/delete")
     public void deleteMedia(@RequestBody String title) {
+        title = title.replace("\"", "");
         mediaService.deleteMedia(title);
     }
-
     @PatchMapping("/edit/movie")
     public void editMovie(@RequestBody Movie movie) {
         mediaService.editMovie(movie);
@@ -31,12 +33,17 @@ public class MediaController {
     }
 
     @PostMapping("/create/movie")
-    public void createMedia(@RequestBody Movie movie) {
+    public void createMovie(@RequestBody Movie movie) {
         mediaService.createMovie(movie);
     }
 
     @PostMapping("/create/show")
     public void createShow(@RequestBody Show show) {
         mediaService.createShow(show);
+    }
+
+    @GetMapping("/all")
+    public List<Media> getAllMedia() {
+        return mediaService.getAllMedia();  // or whatever your service method is
     }
 }
