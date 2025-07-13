@@ -4,7 +4,7 @@ import MovieCard from '../components/MovieCard';
 import MovieModal from '../components/MovieModal';
 import { sampleMovies } from '../data/movieData';
 
-const Movies = ({ searchTerm, onSearch }) => {
+const Movies = ({ searchTerm, onSearch, currentUser }) => {
   const [movies] = useState(sampleMovies);
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -86,6 +86,7 @@ const Movies = ({ searchTerm, onSearch }) => {
         onToggleWatchlist={handleToggleWatchlist}
         isFavorite={selectedMovie && favorites.includes(selectedMovie.id)}
         isInWatchlist={selectedMovie && watchlist.includes(selectedMovie.id)}
+        currentUser={currentUser}
       />
     </div>
   );

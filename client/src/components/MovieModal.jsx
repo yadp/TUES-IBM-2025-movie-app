@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Heart, Bookmark, Calendar, Clock } from 'lucide-react';
 
-
-const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlist, isFavorite, isInWatchlist }) => {
+const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlist, isFavorite, isInWatchlist, currentUser }) => {
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [reviews, setReviews] = useState(movie?.reviews || []);
 
@@ -16,7 +15,7 @@ const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlis
     if (newReview.comment.trim()) {
       const review = {
         id: Date.now(),
-        user: "CurrentUser",
+        user: currentUser ? currentUser.username : "Current User", 
         rating: newReview.rating,
         comment: newReview.comment,
         date: new Date().toISOString().split('T')[0]
@@ -82,33 +81,39 @@ const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlis
         <div className="reviews-section">
           <h3>Reviews ({reviews.length})</h3>
           
-          <div className="add-review">
-            <h4>Add Your Review</h4>
-            <div className="review-form">
-              <div className="rating-input">
-                <label>Rating:</label>
-                <select
-                  value={newReview.rating}
-                  onChange={(e) => setNewReview({...newReview, rating: parseInt(e.target.value)})}
-                >
-                  <option value={5}>★★★★★ (5)</option>
-                  <option value={4}>★★★★☆ (4)</option>
-                  <option value={3}>★★★☆☆ (3)</option>
-                  <option value={2}>★★☆☆☆ (2)</option>
-                  <option value={1}>★☆☆☆☆ (1)</option>
-                </select>
+          {currentUser ? (
+            <div className="add-review">
+              <h4>Add Your Review</h4>
+              <div className="review-form">
+                <div className="rating-input">
+                  <label>Rating:</label>
+                  <select
+                    value={newReview.rating}
+                    onChange={(e) => setNewReview({...newReview, rating: parseInt(e.target.value)})}
+                  >
+                    <option value={5}>★★★★★ (5)</option>
+                    <option value={4}>★★★★☆ (4)</option>
+                    <option value={3}>★★★☆☆ (3)</option>
+                    <option value={2}>★★☆☆☆ (2)</option>
+                    <option value={1}>★☆☆☆☆ (1)</option>
+                  </select>
+                </div>
+                <textarea
+                  placeholder="Write your review..."
+                  value={newReview.comment}
+                  onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
+                  className="review-textarea"
+                />
+                <button onClick={handleAddReview} className="submit-review-btn">
+                  Submit Review
+                </button>
               </div>
-              <textarea
-                placeholder="Write your review..."
-                value={newReview.comment}
-                onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
-                className="review-textarea"
-              />
-              <button onClick={handleAddReview} className="submit-review-btn">
-                Submit Review
-              </button>
             </div>
-          </div>
+          ) : (
+            <div className="login-prompt">
+              <p>Please <a href="/login">log in</a> to add a review.</p>
+            </div>
+          )}
 
           <div className="reviews-list">
             {reviews.map(review => (

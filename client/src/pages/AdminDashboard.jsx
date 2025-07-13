@@ -145,8 +145,8 @@ const AdminDashboard = () => {
       <div className="form">
         <input name="title" placeholder="Title" value={form.title} onChange={handleInputChange} />
         <input name="genre" placeholder="Genre" value={form.genre} onChange={handleInputChange} />
-        <input name="year" type="number" placeholder="Year" value={form.year} onChange={handleInputChange} />
-        <input name="duration" type="number" placeholder="Duration (minutes)" value={form.duration} onChange={handleInputChange} />
+        <input name="year" type="number" min="0" placeholder="Year" value={form.year} onChange={handleInputChange} />
+        <input name="duration" type="number" min="0" placeholder="Duration (minutes)" value={form.duration} onChange={handleInputChange} />
         <input name="rating" type="number" min="0" max="5" step="0.1" placeholder="Rating (0 to 5)" value={form.rating} onChange={handleInputChange} />
         <select name="type" value={form.type} onChange={handleInputChange}>
           <option value="movie">Movie</option>

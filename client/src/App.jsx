@@ -127,7 +127,7 @@ function AppContent() {
         />
       )}
       <Routes>
-        <Route path="/" element={<Home searchTerm={searchTerm} onSearch={setSearchTerm} />} />
+        <Route path="/" element={<Home searchTerm={searchTerm} onSearch={setSearchTerm} currentUser={user} />} />
         <Route 
           path="/admin" 
           element={
