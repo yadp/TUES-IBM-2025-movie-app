@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/rating")
 public class RatingController {
@@ -20,7 +20,7 @@ public class RatingController {
     @Autowired
     private RatingService ratingService;
 
-    @GetMapping("/single-of-user")
+    @PostMapping("/single-of-user")
     public Optional<Rating> getUserRating(@RequestBody String title)
     throws UserNotFoundException, MediaNotFoundException {
         return ratingService.getRatingOfUser(title);

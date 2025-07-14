@@ -2,28 +2,123 @@ import React, { useState, useEffect } from 'react';
 import { Star, Heart, Bookmark, Calendar, Clock } from 'lucide-react';
 
 const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlist, isFavorite, isInWatchlist, currentUser }) => {
-  const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
-  const [reviews, setReviews] = useState(movie?.reviews || []);
+  const [newReview, setNewReview] = useState({ comment: '', rating: 5 });
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (movie) {
-      setReviews(movie.reviews || []);
+    if (movie && isOpen && currentUser) {
+      fetchReviews();
     }
-  }, [movie]);
+  }, [movie, isOpen, currentUser]);
 
-  const handleAddReview = () => {
-    if (newReview.comment.trim()) {
-      const review = {
-        id: Date.now(),
-        user: currentUser ? currentUser.username : "Current User", 
-        rating: newReview.rating,
-        comment: newReview.comment,
-        date: new Date().toISOString().split('T')[0]
-      };
-      setReviews([review, ...reviews]);
-      setNewReview({ rating: 5, comment: '' });
+const fetchReviews = async () => {
+  try {
+    const response = await fetch('http://localhost:8081/review/of-media', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Basic ' + btoa('test:test'),
+      },
+      body: movie.title,
+      credentials: 'include'
+    });
+      
+      if (response.ok) {
+        const backendReviews = await response.json();
+        const transformedReviews = backendReviews.map(review => ({
+          id: review.id,
+          user: review.user.username,
+          comment: review.contents,
+          rating: review.rating,
+          date: review.date
+        }));
+        setReviews(transformedReviews);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      setReviews(movie?.reviews || []);
     }
   };
+
+
+  const handleAddReview = async () => {
+    if (!newReview.comment.trim()) return;
+
+    setLoading(true);
+    try {
+      const reviewResponse = await fetch('http://localhost:8081/review/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Basic ' + btoa('test:test'),
+        },
+        body: JSON.stringify({
+          title: movie.title,
+          contents: newReview.comment,
+          rating: newReview.rating
+        }),
+        credentials: 'include'
+      });
+
+
+      console.log(movie.title);
+      console.log(newReview.comment);
+
+      if (reviewResponse.ok) {
+        await fetch('http://localhost:8081/watch-history/add', {
+          method: 'POST',
+          headers: {
+            Authorization: 'Basic ' + btoa('test:test'),
+          },
+          body: movie.title,
+          credentials: 'include'
+        });
+
+        await fetchReviews();
+        
+        setNewReview({ comment: '', rating: 5 });
+        alert('Review added successfully!');
+      } else {
+        const error = await response.text();
+        alert(error || 'Failed to add review');
+      }
+    } catch (error) {
+      console.error('Error adding review:', error);
+      alert('Server error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteReview = async () => {
+    if (!confirm('Are you sure you want to delete your review?')) return;
+
+    try {
+      const response = await fetch('http://localhost:8081/review/delete', {
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Basic ' + btoa('test:test'),
+        },
+        body: movie.title,
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        await fetchReviews();
+        alert('Review deleted successfully!');
+      } else {
+        const error = await response.text();
+        alert(error || 'Failed to delete review');
+      }
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      alert('Server error. Please try again.');
+    }
+  };
+
+
+  const userHasReviewed = reviews.some(review => review.user === currentUser?.username);
 
   if (!isOpen || !movie) return null;
 
@@ -52,7 +147,7 @@ const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlis
             </div>
             <p className="genre">{movie.genre}</p>
             <p className="director">Directed by {movie.director}</p>
-            <p className="cast">Starring: {movie.cast.join(', ')}</p>
+          
             
             <div className="modal-actions">
               <button
@@ -81,7 +176,7 @@ const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlis
         <div className="reviews-section">
           <h3>Reviews ({reviews.length})</h3>
           
-          {currentUser ? (
+          {currentUser && !userHasReviewed && (
             <div className="add-review">
               <h4>Add Your Review</h4>
               <div className="review-form">
@@ -101,15 +196,34 @@ const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlis
                 <textarea
                   placeholder="Write your review..."
                   value={newReview.comment}
+                  
                   onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
                   className="review-textarea"
                 />
-                <button onClick={handleAddReview} className="submit-review-btn">
-                  Submit Review
+                <button 
+                  onClick={handleAddReview} 
+                  className="submit-review-btn"
+                  disabled={loading}
+                >
+                  {loading ? 'Submitting...' : 'Submit Review'}
                 </button>
               </div>
             </div>
-          ) : (
+          )}
+          
+          
+
+          {currentUser && userHasReviewed && (
+            <div className="user-review-notice">
+              <p>You have already reviewed this movie. 
+                <button onClick={handleDeleteReview} className="delete-review-btn">
+                  Delete your review
+                </button>
+              </p>
+            </div>
+          )}
+
+          {!currentUser && (
             <div className="login-prompt">
               <p>Please <a href="/login">log in</a> to add a review.</p>
             </div>
@@ -120,15 +234,33 @@ const MovieModal = ({ movie, isOpen, onClose, onToggleFavorite, onToggleWatchlis
               <div key={review.id} className="review-card">
                 <div className="review-header">
                   <span className="review-user">{review.user}</span>
-                  <div className="review-rating">
-                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                  </div>
                   <span className="review-date">{review.date}</span>
                 </div>
+                
+                <div className="review-stars">
+                {(() => {
+                  switch (review.rating) {
+                    case 5:
+                      return '★★★★★';
+                    case 4:
+                      return '★★★★☆';
+                    case 3:
+                      return '★★★☆☆';
+                    case 2:
+                      return '★★☆☆☆';
+                    case 1:
+                      return '★☆☆☆☆';
+                    default:
+                      return '☆☆☆☆☆';
+                  }
+                })()}
+              </div>
+
                 <p className="review-comment">{review.comment}</p>
               </div>
             ))}
           </div>
+
         </div>
       </div>
     </div>

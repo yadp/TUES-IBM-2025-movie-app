@@ -7,13 +7,15 @@ import lombok.Setter;
 @Getter
 public class ReviewDTO {
     private String title;
-    private String reviewContents;
+    private String contents;
+    private int rating;
 
     public ReviewDTO() {}
 
-    public ReviewDTO(String title, String reviewContents) {
+    public ReviewDTO(String title, String contents, int rating) {
         this.title = title;
-        this.reviewContents = reviewContents;
+        this.contents = contents;
+        this.rating = rating;
     }
 
 }

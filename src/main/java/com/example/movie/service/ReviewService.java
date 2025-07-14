@@ -48,7 +48,7 @@ public class ReviewService {
         return reviewRepo.findByMediaOrderByDateDesc(media);
     }
 
-    public void createReview(String title, String reviewContents) {
+    public void createReview(String title, String contents, int rating) {
         String username = Optional.of((String) session.getAttribute("username")).orElseThrow(() ->
                 new UserAlreadyLoggedOutException("User logged out")
         );
@@ -57,7 +57,7 @@ public class ReviewService {
         Media media =  mediaRepo.findByTitle(title);
         if (media == null) { throw new RuntimeException("Media not found: " + title); }
 
-        reviewRepo.save(new Review(reviewContents, user, media, LocalDate.now()));
+        reviewRepo.save(new Review(user, media, contents, rating, LocalDate.now()));
 
     }
 
