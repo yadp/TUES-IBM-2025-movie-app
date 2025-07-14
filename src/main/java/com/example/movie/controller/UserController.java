@@ -3,6 +3,7 @@ package com.example.movie.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.movie.exception.UserAlreadyLoggedOutException;
@@ -11,7 +12,7 @@ import com.example.movie.exception.UserNotFoundException;
 import com.example.movie.model.User;
 import com.example.movie.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -29,7 +30,7 @@ public class UserController {
         userService.login(user);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public void logOutUser() throws UserAlreadyLoggedOutException {
         userService.logout();
     }
@@ -45,14 +46,24 @@ public class UserController {
     }
 
     @GetMapping("/type")
-    public Optional<String> getUserType(@RequestBody String username) {
-        return userService.getUserType(username);
+    public Optional<String> getUserType() {
+        return userService.getUserType();
     }
 
     @GetMapping("/")
     public Optional<User> getUserById(@RequestBody String idStr) {
         Long id = Long.parseLong(idStr.trim());
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser() {
+        Optional<User> currentUser = userService.getCurrentUser();
+        if (currentUser.isPresent()) {
+            return ResponseEntity.ok(currentUser.get());
+        } else {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
     }
 }
 

@@ -1,16 +1,16 @@
 package com.example.movie.service;
 
 import com.example.movie.exception.*;
+import com.example.movie.model.*;
 import com.example.movie.repository.MediaRepository;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.movie.model.User;
 import com.example.movie.repository.UserRepository;
-import com.example.movie.model.Episode;
-import com.example.movie.model.Movie;
-import com.example.movie.model.Show;
+
+import java.util.List;
 
 @Service
 public class MediaService {
@@ -39,10 +39,11 @@ public class MediaService {
         }
     }
 
+    @Transactional
     public void deleteMedia(String title) {
         checkAdmin();
 
-        mediaRepo.delete(mediaRepo.findByTitle(title));
+        mediaRepo.deleteByTitle(title);
     }
 
     public void editMovie(Movie movie) {
@@ -112,5 +113,9 @@ public class MediaService {
         }
 
         mediaRepo.save(show);
+    }
+
+    public List<Media> getAllMedia() {
+        return mediaRepo.findAll();
     }
 }

@@ -44,9 +44,9 @@ public class UserService {
 
         User toSave = new User(u.getUsername(), u.getEmail(), passwordEncoder.encode(u.getPassword()), u.getType());
 
-        session.setAttribute("userId", u.getId());
-        session.setAttribute("username", u.getUsername());
-        session.setMaxInactiveInterval(48 * 3600);
+//        session.setAttribute("userId", u.getId());
+//        session.setAttribute("username", u.getUsername());
+//        session.setMaxInactiveInterval(48 * 3600);
 
         createUser(toSave);
         return ResponseEntity.ok("Sign Up successful");
@@ -142,8 +142,8 @@ public class UserService {
         logout();
     }
 
-    public Optional<String> getUserType(String username) {
-        User user = userRepo.findByUsername(username);
+    public Optional<String> getUserType() {
+        User user = userRepo.findByUsername((String) session.getAttribute("username"));
         if(user == null) {
             return Optional.empty();
         }

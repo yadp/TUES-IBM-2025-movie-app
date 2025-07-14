@@ -1,0 +1,56 @@
+/* Контейнер за Login */
+.login-container {
+    background: #333;
+    color: #eee;
+    padding: 30px;
+    border-radius: 8px;
+    width: 300px;
+    margin: 50px auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .login-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  } 
+  .login-form input {
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+  }
+  
+  .login-form button {
+    padding: 10px;
+    background: #55aa55;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .login-form button:hover {
+    background: #77cc77;
+  }
+  
+  .login-link {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  .login-link a {
+    color: #aaa;
+    text-decoration: none;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+
