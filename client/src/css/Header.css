@@ -104,6 +104,14 @@
   width: 100%;
 }
 
+.title-and-logo {
+  display: flex;
+}
+
+.logo {
+  margin-right: 0.5rem;
+}
+
 @media (max-width: 770px) {
   .header .container {
     flex-direction: column;

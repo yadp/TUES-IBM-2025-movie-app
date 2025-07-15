@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
@@ -26,14 +26,14 @@ public class ReviewController {
         return reviewService.getReviewsOfUser();
     }
 
-    @GetMapping("/of-media")
+    @PostMapping("/of-media")
     public List<Review> reviewsOfMedia(@RequestBody String title) throws MediaNotFoundException {
         return reviewService.getReviewsOfMedia(title);
     }
 
     @PostMapping("/add")
     public void addReview(@RequestBody ReviewDTO reviewDTO) throws ReviewExistsException {
-        reviewService.createReview(reviewDTO.getTitle(), reviewDTO.getReviewContents());
+        reviewService.createReview(reviewDTO.getTitle(), reviewDTO.getContents(), reviewDTO.getRating());
     }
 
 

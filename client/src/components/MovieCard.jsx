@@ -6,7 +6,7 @@ const MovieCard = ({ movie, onSelect, onToggleFavorite, onToggleWatchlist, isFav
   return (
     <div className="movie-card" onClick={() => onSelect(movie)}>
       <div className="movie-poster">
-        <img src={movie.poster} alt={movie.title} />
+        <img src={"../../public/" + movie.title + ".jpg"} alt={movie.title} />
         <div className="movie-overlay">
           <Play className="play-icon" />
         </div>
@@ -35,10 +35,9 @@ const MovieCard = ({ movie, onSelect, onToggleFavorite, onToggleWatchlist, isFav
         <h3 className="movie-title">{movie.title}</h3>
         <div className="movie-meta">
           <span className="movie-year">{movie.year}</span>
-          <span className="movie-type">{movie.type}</span>
           <div className="movie-rating">
             <Star className="star-icon" />
-            <span>{movie.rating}</span>
+            <span>{movie.averageRating}</span>
           </div>
         </div>
         <p className="movie-genre">{movie.genre}</p>

@@ -71,11 +71,6 @@ function AppContent() {
           type: userType
         });
         
-        console.log('Auth check - User set:', {
-          username: userInfo.username,
-          email: userInfo.email,
-          type: userType
-        });
       } else if (response.status === 401) {
         setUser(null);
       } else {
@@ -89,12 +84,11 @@ function AppContent() {
   };
 
   const handleLoginSuccess = async (userData) => {
-    console.log('Login success - User data:', userData);
     const cleanedUserData = {
       ...userData,
       type: userData.type ? userData.type.replace(/['"]/g, '').trim() : userData.type
     };
-    console.log('Login success - Cleaned user data:', cleanedUserData);
+
     setUser(cleanedUserData);
     await checkAuthStatus();
   };

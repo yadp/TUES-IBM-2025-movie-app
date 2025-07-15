@@ -58,6 +58,11 @@ const AdminDashboard = () => {
   };
 
   const handleAddOrUpdate = () => {
+    if (!['movie', 'show'].includes(form.type)) {
+      alert('Type must be either "movie" or "show".');
+      return;
+    }
+
     const payload = {
       ...form,
       cast: form.cast.split(',').map(c => c.trim()),
@@ -84,10 +89,10 @@ const AdminDashboard = () => {
           throw new Error(errorData.message || `Server error (${res.status})`);
         }
 
-        alert(editIndex !== null ? "Updated successfully." : "Created successfully.");
+
         if (editIndex !== null) {
           const updated = [...movies];
-          updated[editIndex] = payload;
+          updated[editIndex] = { ...payload };
           setMovies(updated);
         } else {
           setMovies([...movies, { ...payload, id: Date.now() }]);
@@ -103,8 +108,16 @@ const AdminDashboard = () => {
   const handleEdit = (index) => {
     const movie = movies[index];
     setForm({
-      ...movie,
-      cast: Array.isArray(movie.cast) ? movie.cast.join(', ') : ''
+      title: movie.title || '',
+      genre: movie.genre || '',
+      type: movie.type || 'movie',
+      cast: Array.isArray(movie.cast) ? movie.cast.join(', ') : '',
+      poster: movie.poster || '',
+      year: movie.year || '',
+      duration: movie.duration || '',
+      rating: movie.averageRating || '',
+      description: movie.description || '',
+      director: movie.director || ''
     });
     setEditIndex(index);
   };
@@ -119,7 +132,7 @@ const AdminDashboard = () => {
         Authorization: "Basic " + btoa("test:test")
       },
       credentials: "include",
-      body: JSON.stringify(title) // backend expects just the string title
+      body: JSON.stringify(title)
     })
       .then(async (res) => {
         if (!res.ok) {
@@ -130,7 +143,6 @@ const AdminDashboard = () => {
         updated.splice(index, 1);
         setMovies(updated);
         resetForm();
-        alert("Deleted successfully.");
       })
       .catch((err) => {
         console.error(err);
@@ -152,9 +164,9 @@ const AdminDashboard = () => {
           <option value="movie">Movie</option>
           <option value="show">Show</option>
         </select>
-        <input name="cast" placeholder="Cast (comma-separated)" value={form.cast} onChange={handleInputChange} />
+        {/* <input name="cast" placeholder="Cast (comma-separated)" value={form.cast} onChange={handleInputChange} />
         <input name="director" placeholder="Director" value={form.director} onChange={handleInputChange} />
-        <input name="poster" placeholder="Poster URL" value={form.poster} onChange={handleInputChange} />
+        <input name="poster" placeholder="Poster URL" value={form.poster} onChange={handleInputChange} /> */}
         <textarea name="description" placeholder="Description" value={form.description} onChange={handleInputChange} />
 
         <button onClick={handleAddOrUpdate}>
@@ -170,14 +182,16 @@ const AdminDashboard = () => {
           <ul>
             {movies.map((movie, index) => (
               <li key={movie.id || index}>
-                <img src={movie.poster} alt={movie.title} style={{ width: '120px' }} />
+                <img src={"../../public/" + movie.title + ".jpg"} alt={movie.title} style={{ width: '120px' }} />
                 <div className="movie-info">
                   <h4>{movie.title} ({movie.year})</h4>
                   <p><strong>Genre:</strong> {movie.genre}</p>
-                  <p><strong>Type:</strong> {movie.type}</p>
+                  <p><strong>Duration:</strong> {movie.duration} min</p>
+                  {/* <p><strong>Type:</strong> {movie.type}</p> */}
                   <p><strong>Rating:</strong> {movie.averageRating}</p>
-                  <p><strong>Cast:</strong> {(movie.cast || []).join(', ')}</p>
-                  <p><strong>Director:</strong> {movie.director}</p>
+                  {/* <p><strong>Cast:</strong> {(movie.cast || []).join(', ')}</p>
+                  <p><strong>Director:</strong> {movie.director}</p> */}
+                  <p><strong>Description:</strong> {movie.description}</p>
                   <div className="actions">
                     <button onClick={() => handleEdit(index)}>Edit</button>
                     <button onClick={() => handleDelete(index)} className="delete">Delete</button>

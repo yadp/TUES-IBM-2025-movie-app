@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.movie.model.WatchHistory;
 import com.example.movie.service.WatchHistoryService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/watch-history")
 public class WatchHistoryController {

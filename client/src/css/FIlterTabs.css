@@ -4,6 +4,8 @@
   border-bottom: 1px solid #333;
   margin-bottom: 2rem;
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .filter-tabs .container {
@@ -11,7 +13,6 @@
   gap: 1rem;
   overflow-x: auto;
   padding: 0 20px;
-  max-width: 1400px;
   margin: 0 auto;
   width: 100%;
 }
@@ -28,6 +29,7 @@
   transition: all 0.3s ease;
   white-space: nowrap;
   min-width: fit-content;
+  margin: 0 4rem;
 }
 
 .filter-tab:hover {

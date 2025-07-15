@@ -16,11 +16,6 @@ public class Review {
     private long id;
 
     @NonNull
-    @Column(nullable = false)
-    @Getter @Setter
-    private String contents;
-
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @Getter @Setter
@@ -31,6 +26,16 @@ public class Review {
     @JoinColumn(name = "media_id", nullable = false)
     @Getter @Setter
     private Media media;
+
+    @NonNull
+    @Column(nullable = false)
+    @Getter @Setter
+    private String contents;
+
+    @NonNull
+    @Column(nullable = false)
+    @Getter @Setter
+    private Integer rating;
 
     @NonNull
     @Column(nullable = false)

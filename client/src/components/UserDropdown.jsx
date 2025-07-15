@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { User, ChevronDown, History, Clock, Lock, Edit, LogOut } from 'lucide-react';
+import { User, ChevronDown, History, Clock, Lock, Edit, LogOut, Star, Calendar } from 'lucide-react';
 
 const UserDropdown = ({ user, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showChangeUsername, setShowChangeUsername] = useState(false);
   const [showReviewHistory, setShowReviewHistory] = useState(false);
-  const [showWatchHistory, setShowWatchHistory] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [userReviews, setUserReviews] = useState([]);
-  const [watchHistory, setWatchHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -24,33 +23,72 @@ const UserDropdown = ({ user, onLogout }) => {
   }, []);
 
   useEffect(() => {
-    if (user) {
-      fetchUserReviews();
-      fetchWatchHistory();
+    if (user && isOpen) {
+      if (showReviewHistory) {
+        fetchUserReviews();
+      }
     }
-  }, [user]);
+  }, [user, isOpen, showReviewHistory]);
 
   const fetchUserReviews = async () => {
+    setLoading(true);
     try {
-      const mockReviews = [
-        { id: 1, movieTitle: "The Dark Knight", rating: 5, comment: "Amazing movie!", date: "2024-01-15" },
-        { id: 2, movieTitle: "Inception", rating: 4, comment: "Mind-bending!", date: "2024-01-10" }
-      ];
-      setUserReviews(mockReviews);
+      const response = await fetch('http://localhost:8081/review/of-user', {
+        method: 'GET',
+        headers: {
+        Authorization: 'Basic ' + btoa('test:test'),
+        },
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const reviews = await response.json();
+        const transformedReviews = reviews.map(review => ({
+          id: review.id,
+          movieTitle: review.media.title,
+          comment: review.reviewContents,
+          date: review.date,
+          mediaType: review.media.type || 'movie'
+        }));
+        setUserReviews(transformedReviews);
+      } else {
+        console.error('Failed to fetch user reviews');
+        setUserReviews([
+          { id: 1, movieTitle: "The Dark Knight", comment: "Amazing movie!", date: "2024-01-15" },
+          { id: 2, movieTitle: "Inception", comment: "Mind-bending!", date: "2024-01-10" }
+        ]);
+      }
     } catch (error) {
       console.error('Error fetching user reviews:', error);
+      setUserReviews([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchWatchHistory = async () => {
+
+  const handleDeleteReview = async (title) => {
+    if (!confirm('Are you sure you want to delete this review?')) return;
+
     try {
-      const mockHistory = [
-        { id: 1, title: "The Dark Knight", watchedAt: "2024-01-15", type: "movie" },
-        { id: 2, title: "Breaking Bad", watchedAt: "2024-01-12", type: "series" }
-      ];
-      setWatchHistory(mockHistory);
+      const response = await fetch('http://localhost:8081/review/delete', {
+        method: 'DELETE',
+              headers: {
+        Authorization: 'Basic ' + btoa('test:test'),
+      },
+        body: title,
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        setUserReviews(prev => prev.filter(review => review.movieTitle !== title));
+      } else {
+        const error = await response.text();
+        alert(error || 'Failed to delete review');
+      }
     } catch (error) {
-      console.error('Error fetching watch history:', error);
+      console.error('Error deleting review:', error);
+      alert('Server error. Please try again.');
     }
   };
 
@@ -68,7 +106,6 @@ const UserDropdown = ({ user, onLogout }) => {
       });
 
       if (response.ok) {
-        alert('Password changed successfully!');
         setNewPassword('');
         setShowChangePassword(false);
       } else {
@@ -89,7 +126,9 @@ const UserDropdown = ({ user, onLogout }) => {
     try {
       const response = await fetch('http://localhost:8081/user/name', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+              headers: {
+        Authorization: 'Basic ' + btoa('test:test'),
+      },
         body: newUsername,
         credentials: 'include'
       });
@@ -98,7 +137,6 @@ const UserDropdown = ({ user, onLogout }) => {
         alert('Username changed successfully! Please log in again.');
         setNewUsername('');
         setShowChangeUsername(false);
-        // Use the proper logout function that handles both server and client
         onLogout();
       } else {
         const error = await response.text();
@@ -129,7 +167,6 @@ const UserDropdown = ({ user, onLogout }) => {
       }
 
       if (response.ok) {
-        alert(data.message || "Logged out successfully.");
         onLogout(); 
         window.location.href = "/";
       } else {
@@ -140,6 +177,13 @@ const UserDropdown = ({ user, onLogout }) => {
       alert(error.message || "Server error");
       onLogout();
       window.location.href = "/";
+    }
+  };
+
+  const toggleReviewHistory = () => {
+    setShowReviewHistory(!showReviewHistory);
+    if (!showReviewHistory) {
+      fetchUserReviews();
     }
   };
 
@@ -162,42 +206,37 @@ const UserDropdown = ({ user, onLogout }) => {
           </div>
 
           <div className="dropdown-items">
-            <button onClick={() => setShowReviewHistory(!showReviewHistory)} className="dropdown-item">
+            <button onClick={toggleReviewHistory} className="dropdown-item">
               <History size={16} /><span>Review History</span>
             </button>
             {showReviewHistory && (
               <div className="dropdown-submenu">
                 <h4>Your Reviews</h4>
-                {userReviews.length > 0 ? (
+                {loading ? (
+                  <p className="loading">Loading...</p>
+                ) : userReviews.length > 0 ? (
                   <div className="reviews-list">
                     {userReviews.map(review => (
                       <div key={review.id} className="review-item">
-                        <div className="review-title">{review.movieTitle}</div>
-                        <div className="review-rating">Rating: {review.rating}/5</div>
-                        <div className="review-date">{review.date}</div>
+                        <div className="review-header">
+                          <div className="review-title">{review.movieTitle}</div>
+                          <button 
+                            onClick={() => handleDeleteReview(review.movieTitle)}
+                            className="delete-btn"
+                            title="Delete review"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <div className="review-date">
+                          <Calendar size={12} />
+                          {review.date}
+                        </div>
+                        <p className="review-comment">{review.comment}</p>
                       </div>
                     ))}
                   </div>
                 ) : <p className="no-data">No reviews yet</p>}
-              </div>
-            )}
-
-            <button onClick={() => setShowWatchHistory(!showWatchHistory)} className="dropdown-item">
-              <Clock size={16} /><span>Watch History</span>
-            </button>
-            {showWatchHistory && (
-              <div className="dropdown-submenu">
-                <h4>Recently Watched</h4>
-                {watchHistory.length > 0 ? (
-                  <div className="watch-list">
-                    {watchHistory.map(item => (
-                      <div key={item.id} className="watch-item">
-                        <div className="watch-title">{item.title}</div>
-                        <div className="watch-date">{item.watchedAt}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : <p className="no-data">No watch history yet</p>}
               </div>
             )}
 
@@ -206,8 +245,13 @@ const UserDropdown = ({ user, onLogout }) => {
             </button>
             {showChangePassword && (
               <div className="dropdown-submenu">
-                <input type="password" placeholder="New Password" value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)} className="change-input" />
+                <input 
+                  type="password" 
+                  placeholder="New Password" 
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)} 
+                  className="change-input" 
+                />
                 <div className="change-buttons">
                   <button onClick={handleChangePassword} className="btn-primary">Update</button>
                   <button onClick={() => { setShowChangePassword(false); setNewPassword(''); }} className="btn-secondary">Cancel</button>
@@ -220,8 +264,13 @@ const UserDropdown = ({ user, onLogout }) => {
             </button>
             {showChangeUsername && (
               <div className="dropdown-submenu">
-                <input type="text" placeholder="New Username" value={newUsername}
-                  onChange={(e) => setNewUsername(e.target.value)} className="change-input" />
+                <input 
+                  type="text" 
+                  placeholder="New Username" 
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)} 
+                  className="change-input" 
+                />
                 <div className="change-buttons">
                   <button onClick={handleChangeUsername} className="btn-primary">Update</button>
                   <button onClick={() => { setShowChangeUsername(false); setNewUsername(''); }} className="btn-secondary">Cancel</button>
