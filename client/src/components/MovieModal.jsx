@@ -62,8 +62,7 @@ const fetchReviews = async () => {
       });
 
 
-      console.log(movie.title);
-      console.log(newReview.comment);
+
 
       if (reviewResponse.ok) {
         await fetch('http://localhost:8081/watch-history/add', {
@@ -78,10 +77,8 @@ const fetchReviews = async () => {
         await fetchReviews();
         
         setNewReview({ comment: '', rating: 5 });
-        alert('Review added successfully!');
       } else {
         const error = await response.text();
-        alert(error || 'Failed to add review');
       }
     } catch (error) {
       console.error('Error adding review:', error);
@@ -106,7 +103,6 @@ const fetchReviews = async () => {
 
       if (response.ok) {
         await fetchReviews();
-        alert('Review deleted successfully!');
       } else {
         const error = await response.text();
         alert(error || 'Failed to delete review');
@@ -128,13 +124,13 @@ const fetchReviews = async () => {
         <button className="close-btn" onClick={onClose}>×</button>
         
         <div className="modal-header">
-          <img src={movie.poster} alt={movie.title} className="modal-poster" />
+          <img src={"../../public/" + movie.title + ".jpg"} alt={movie.title} className="modal-poster" />
           <div className="modal-info">
             <h2 className="modal-title">{movie.title}</h2>
             <div className="modal-meta">
               <span className="rating">
                 <Star className="star-icon" />
-                {movie.rating}
+                {movie.averageRating}
               </span>
               <span className="year">
                 <Calendar className="icon" />
@@ -146,7 +142,6 @@ const fetchReviews = async () => {
               </span>
             </div>
             <p className="genre">{movie.genre}</p>
-            <p className="director">Directed by {movie.director}</p>
           
             
             <div className="modal-actions">

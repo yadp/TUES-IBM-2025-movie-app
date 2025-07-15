@@ -82,7 +82,6 @@ const UserDropdown = ({ user, onLogout }) => {
 
       if (response.ok) {
         setUserReviews(prev => prev.filter(review => review.movieTitle !== title));
-        alert('Review deleted successfully');
       } else {
         const error = await response.text();
         alert(error || 'Failed to delete review');
@@ -107,7 +106,6 @@ const UserDropdown = ({ user, onLogout }) => {
       });
 
       if (response.ok) {
-        alert('Password changed successfully!');
         setNewPassword('');
         setShowChangePassword(false);
       } else {
@@ -166,11 +164,9 @@ const UserDropdown = ({ user, onLogout }) => {
       try {
         data = await response.json();
       } catch (e) {
-        // Handle non-JSON response
       }
 
       if (response.ok) {
-        alert(data.message || "Logged out successfully.");
         onLogout(); 
         window.location.href = "/";
       } else {

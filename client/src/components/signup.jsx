@@ -22,7 +22,6 @@ export default function SignUp() {
     })
       .then((res) => {
         if (res.ok) {
-          alert("Account created! Please log in.");
           window.location.href = "/login";
         } else {
           return res.text().then(text => {

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
 
 const Header = ({ onSearch, searchTerm, user, setUser }) => {
-  console.log('Header - Current user:', user);
 
   const handleLogoutOnly = () => {
     setUser(null);
@@ -13,7 +12,10 @@ const Header = ({ onSearch, searchTerm, user, setUser }) => {
   return (
     <header className="header">
       <div className="container">
-        <h1 className="logo">DKMDB</h1>
+        <div className="title-and-logo">
+          <h1 className="logo">DKMDB</h1>
+          <img src="../../public/dkmdb_logo.png" alt="" width="51rem"/>
+        </div>
         <div className="search-container">
           <div className="search-bar">
             <Search className="search-icon" />
